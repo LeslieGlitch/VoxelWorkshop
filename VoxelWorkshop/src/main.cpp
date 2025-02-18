@@ -1,6 +1,14 @@
+/*
+ * main.cpp
+ * 
+ * Starting point for VoxelWorkshop engine
+ */
+
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#include "Voxels/Chunk.h"
 
 // SETTINGS
 const int VIEWPORT_SIZE[] = { 800, 600 };
@@ -11,7 +19,9 @@ void processInput(GLFWwindow* window);
 int main() {
 
 	// initialize GLFW
-	glfwInit();
+	if (!glfwInit()) {
+		return -1;
+	}
 
 	// openGL ver. 3.3
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -21,7 +31,9 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 #ifdef __APPLE__
+	// separate settings for apple devices
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
 #endif
 
 	// create window
@@ -37,7 +49,10 @@ int main() {
 	// focus on new window
 	glfwMakeContextCurrent(window);
 
-	// guard clause: failure to initialize GLAD
+	// vsync
+	glfwSwapInterval(0);
+
+	// initialize GLAD
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cout << "ERROR: Failure to initialize GLAD" << std::endl;
 		glfwTerminate();
@@ -59,6 +74,8 @@ int main() {
 
 		// send new frame to window
 		glfwSwapBuffers(window);
+
+		// poll for events and process
 		glfwPollEvents();
 	}
 
