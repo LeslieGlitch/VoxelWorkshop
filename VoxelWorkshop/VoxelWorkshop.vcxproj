@@ -142,6 +142,7 @@
     <None Include="glfw3.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\RenderingEngine.hpp" />
     <ClInclude Include="src\Voxels\Chunk.h" />
     <ClInclude Include="src\Voxels\Voxel.h" />
   </ItemGroup>
