@@ -6,12 +6,34 @@
 
 #include "Chunk.h"
 
-Chunk::Chunk() {
-	m_pVoxels = new Voxel * *[Chunk::CHUNK_SIZE];
+Chunk::Chunk(int ChunkCoords[3]) {
+	// set chunk coordinates
+	for (int i = 0; i < 3; ++i) {
+		Coords[i] = ChunkCoords[i];
+	}
+
+	// Create a new voxel for each spot
 	for (int i = 0; i < Chunk::CHUNK_SIZE; ++i) {
-		m_pVoxels[i] = new Voxel * [Chunk::CHUNK_SIZE];
 		for (int j = 0; j < Chunk::CHUNK_SIZE; ++j) {
-			m_pVoxels[i][j] = new Voxel[Chunk::CHUNK_SIZE];
+			for (int k = 0; k < Chunk::CHUNK_SIZE; ++k) {
+				Voxels[i][j][k] = new Voxel();
+			}
+		}
+	}
+}
+
+Chunk::Chunk(Chunk orig, int ChunkCoords[3]) {
+	// set chunk coordinates
+	for (int i = 0; i < 3; ++i) {
+		Coords[i] = ChunkCoords[i];
+	}
+
+	// set each voxel to the same as the copied chunk
+	for (int i = 0; i < Chunk::CHUNK_SIZE; ++i) {
+		for (int j = 0; j < Chunk::CHUNK_SIZE; ++j) {
+			for (int k = 0; k < Chunk::CHUNK_SIZE; ++k) {
+				Voxels[i][j][k] = new Voxel(*orig.getVoxel(i, j, k));
+			}
 		}
 	}
 }
@@ -19,11 +41,20 @@ Chunk::Chunk() {
 Chunk::~Chunk() {
 	for (int i = 0; i < Chunk::CHUNK_SIZE; ++i) {
 		for (int j = 0; j < Chunk::CHUNK_SIZE; ++j) {
-			delete[] m_pVoxels[i][j];
+			for (int k = 0; k < Chunk::CHUNK_SIZE; ++k) {
+				delete Voxels[i][j][k];
+			}
 		}
-		delete[] m_pVoxels[i];
 	}
-	delete[] m_pVoxels;
+}
+
+Voxel* Chunk::getVoxel(int i, int j, int k) {
+	return Voxels[i][j][k];
+}
+
+void Chunk::setVoxel(Voxel* voxel, int i, int j, int k) {
+	Voxels[i][j][k] = voxel;
+	return;
 }
 
 void Chunk::Update(float dt) {
