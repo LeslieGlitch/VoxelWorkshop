@@ -42,7 +42,7 @@ void Voxel::setColor(int albedo[3]) {
 
 Voxel Voxel::operator=(const Voxel& right) {
 	Voxel result;
-	active = right.isActive();
+	isActive(right.isActive());
 	setColor(right.getColor());
 	return result;
 }

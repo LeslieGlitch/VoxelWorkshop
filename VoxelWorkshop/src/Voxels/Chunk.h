@@ -16,7 +16,7 @@ public:
 
 	/// @brief Copy Constructor for Chunk
 	/// @param orig Chunk to be copied
-	Chunk(Chunk orig, int ChunkCoords[3]);
+	Chunk(const Chunk& orig, int ChunkCoords[3]);
 
 	/// @brief Destructor for Chunk
 	~Chunk();
@@ -26,7 +26,7 @@ public:
 	/// @param j Y position within chunk
 	/// @param k Z position within chunk
 	/// @return Pointer to specified voxel
-	Voxel* getVoxel(int i, int j, int k);
+	Voxel* getVoxel(int i, int j, int k) const;
 
 	/// @brief Replaces a voxel from the chunk with a new voxel
 	/// @param voxel Pointer to voxel to be emplaced

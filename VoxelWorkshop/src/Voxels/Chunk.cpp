@@ -22,7 +22,7 @@ Chunk::Chunk(int ChunkCoords[3]) {
 	}
 }
 
-Chunk::Chunk(Chunk orig, int ChunkCoords[3]) {
+Chunk::Chunk(const Chunk& orig, int ChunkCoords[3]) {
 	// set chunk coordinates
 	for (int i = 0; i < 3; ++i) {
 		Coords[i] = ChunkCoords[i];
@@ -48,7 +48,7 @@ Chunk::~Chunk() {
 	}
 }
 
-Voxel* Chunk::getVoxel(int i, int j, int k) {
+Voxel* Chunk::getVoxel(int i, int j, int k) const {
 	return Voxels[i][j][k];
 }
 
