@@ -5,6 +5,7 @@
  */
 
 #include "Chunk.h"
+#include <GLFW/glfw3.h>
 
 Chunk::Chunk(int ChunkCoords[3]) {
 	// set chunk coordinates
