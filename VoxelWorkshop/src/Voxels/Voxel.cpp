@@ -16,7 +16,6 @@ Voxel::Voxel() : active(false) {
 }
 
 Voxel::~Voxel() {
-	active = false;
 	return;
 }
 
@@ -35,6 +34,7 @@ int* Voxel::getColor() const {
 }
 
 void Voxel::setColor(int albedo[3]) {
+	isActive(true);
 	for (int i = 0; i < 3; ++i) {
 		color[i] = albedo[i];
 	}

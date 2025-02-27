@@ -8,7 +8,7 @@
 #include <thread>
 
 #include "Voxels/Chunk.h"
-#include "RenderingEngine.hpp"
+#include "Renderer/RenderingEngine.hpp"
 
 // SETTINGS
 int VIEWPORT_SIZE[] = { 800, 600 };
