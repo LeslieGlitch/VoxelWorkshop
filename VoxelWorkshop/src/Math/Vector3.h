@@ -8,40 +8,41 @@
 #define VECTOR3_H
 
 namespace Math {
+	template<class T>
 	class Vector3 {
 	private:
-		float xVal;
-		float yVal;
-		float zVal;
+		T xVal;
+		T yVal;
+		T zVal;
 
 	public:
 		// constructors
-		Vector3(float x, float y, float z);
+		Vector3(T x, T y, T z);
 		Vector3(const Vector3 &orig);
 
 		// operators
 		void normalize();
-		Vector3 cross(const Vector3& right) const;
-		float dot(const Vector3& right) const;
-		Vector3 operator*(const float& right);
-		Vector3 operator+(const Vector3& right);
-		Vector3 operator-(const Vector3& right);
+		Vector3 cross(const Vector3<T>& right) const;
+		T dot(const Vector3<T>& right) const;
+		Vector3 operator*(const T& right);
+		Vector3 operator+(const Vector3<T>& right);
+		Vector3 operator-(const Vector3<T>& right);
 
 		// setters
-		void x(float val);
-		void y(float val);
-		void z(float val);
-		void r(float val);
-		void g(float val);
-		void b(float val);
+		void x(T val);
+		void y(T val);
+		void z(T val);
+		void r(T val);
+		void g(T val);
+		void b(T val);
 
 		// getters
-		float x() const;
-		float y() const;
-		float z() const;
-		float r() const;
-		float g() const;
-		float b() const;
+		T x() const;
+		T y() const;
+		T z() const;
+		T r() const;
+		T g() const;
+		T b() const;
 	};
 }
 

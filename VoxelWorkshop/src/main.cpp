@@ -7,7 +7,7 @@
 #include <iostream>
 #include <thread>
 
-#include "Voxels/Chunk.h"
+#include "Voxels/Brickgrid.h"
 #include "Renderer/RenderingEngine.hpp"
 
 // SETTINGS

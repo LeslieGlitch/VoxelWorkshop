@@ -1,19 +1,22 @@
 #include "Vector3.h"
 #include <cmath>
 
-Math::Vector3 i = Math::Vector3(1, 0, 0);
-Math::Vector3 j = Math::Vector3(0, 1, 0);
-Math::Vector3 k = Math::Vector3(0, 0, 1);
+Math::Vector3<int> i = Math::Vector3<int>(1, 0, 0);
+Math::Vector3<int> j = Math::Vector3<int>(0, 1, 0);
+Math::Vector3<int> k = Math::Vector3<int>(0, 0, 1);
 
 // constructors
-Math::Vector3::Vector3(float x, float y, float z) : xVal(x), yVal(y), zVal(z) {}
-Math::Vector3::Vector3(const Math::Vector3 &orig) : xVal(orig.x()), yVal(orig.y()), zVal(orig.z()) {}
+template<class T>
+Math::Vector3<T>::Vector3(T x, T y, T z) : xVal(x), yVal(y), zVal(z) {}
+template<class T>
+Math::Vector3<T>::Vector3(const Math::Vector3<T> &orig) : xVal(orig.x()), yVal(orig.y()), zVal(orig.z()) {}
 
 /* Operators */
 
 /// @brief Normalize the vector to a length of 1
-void Math::Vector3::normalize() {
-	float vectorLength = sqrt((xVal * xVal) + (yVal * yVal) + (zVal * zVal));
+template<class T>
+void Math::Vector3<T>::normalize() {
+	T vectorLength = sqrt((xVal * xVal) + (yVal * yVal) + (zVal * zVal));
 	xVal /= vectorLength;
 	yVal /= vectorLength;
 	zVal /= vectorLength;
@@ -22,44 +25,61 @@ void Math::Vector3::normalize() {
 /// @brief Cross product
 /// @param right Right side of operation
 /// @return Cross product of this vector * right vector
-Math::Vector3 Math::Vector3::cross(const Math::Vector3& right) const {
-	float a = (this->y() * right.z()) - (this->z() * right.y());
-	float b = (this->z() * right.x()) - (this->x() * right.z());
-	float c = (this->x() * right.y()) - (this->y() * right.x());
+template<class T>
+Math::Vector3<T> Math::Vector3<T>::cross(const Math::Vector3<T>& right) const {
+	T a = (this->y() * right.z()) - (this->z() * right.y());
+	T b = (this->z() * right.x()) - (this->x() * right.z());
+	T c = (this->x() * right.y()) - (this->y() * right.x());
 	return Math::Vector3(a, b, c);
 }
 
 /// @brief Dot product
 /// @param right Right side of operation
 /// @return Dot product of this vector * right vector
-float Math::Vector3::dot(const Math::Vector3& right) const {
+template<class T>
+T Math::Vector3<T>::dot(const Math::Vector3<T>& right) const {
 	return (this->x() * right.x()) + (this->y() * right.y()) + (this->z() * right.z());
 }
 
-Math::Vector3 Math::Vector3::operator*(const float& right) {
-	return Math::Vector3(this->x()*right, this->y()*right, this->z()*right);
+template<class T>
+Math::Vector3<T> Math::Vector3<T>::operator*(const T& right) {
+	return Math::Vector3<T>(this->x()*right, this->y()*right, this->z()*right);
 }
 
-Math::Vector3 Math::Vector3::operator+(const Math::Vector3& right) {
+template<class T>
+Math::Vector3<T> Math::Vector3<T>::operator+(const Math::Vector3<T>& right) {
 	return Math::Vector3((this->x() + right.x()), (this->y() + right.y()), (this->z() + right.z()));
 }
 
-Math::Vector3 Math::Vector3::operator-(const Math::Vector3& right) {
+template<class T>
+Math::Vector3<T> Math::Vector3<T>::operator-(const Math::Vector3<T>& right) {
 	return Math::Vector3((this->x() - right.x()), (this->y() - right.y()), (this->z() - right.z()));
 }
 
 // setters
-void Math::Vector3::x(float val) { xVal = val; }
-void Math::Vector3::y(float val) { yVal = val; }
-void Math::Vector3::z(float val) { zVal = val; }
-void Math::Vector3::r(float val) { xVal = val; }
-void Math::Vector3::g(float val) { yVal = val; }
-void Math::Vector3::b(float val) { zVal = val; }
+template<class T>
+void Math::Vector3<T>::x(T val) { xVal = val; }
+template<class T>
+void Math::Vector3<T>::y(T val) { yVal = val; }
+template<class T>
+void Math::Vector3<T>::z(T val) { zVal = val; }
+template<class T>
+void Math::Vector3<T>::r(T val) { xVal = val; }
+template<class T>
+void Math::Vector3<T>::g(T val) { yVal = val; }
+template<class T>
+void Math::Vector3<T>::b(T val) { zVal = val; }
 
 // getters
-float Math::Vector3::x() const { return xVal; }
-float Math::Vector3::y() const { return yVal; }
-float Math::Vector3::z() const { return zVal; }
-float Math::Vector3::r() const { return xVal; }
-float Math::Vector3::g() const { return yVal; }
-float Math::Vector3::b() const { return zVal; }
+template<class T>
+T Math::Vector3<T>::x() const { return xVal; }
+template<class T>
+T Math::Vector3<T>::y() const { return yVal; }
+template<class T>
+T Math::Vector3<T>::z() const { return zVal; }
+template<class T>
+T Math::Vector3<T>::r() const { return xVal; }
+template<class T>
+T Math::Vector3<T>::g() const { return yVal; }
+template<class T>
+T Math::Vector3<T>::b() const { return zVal; }
