@@ -4,6 +4,9 @@
  * Runs a loop at a configurable framerate that handles rendering a scene
  */
 
+// Turn on GLM experiments
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -16,6 +19,8 @@
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
+#include "Camera.h"
+
 #include "../Math/Math.h"
 #include "../Voxels/Chunk.h"
 
@@ -109,13 +114,10 @@ namespace Render {
 		VBO1.Unbind();
 		EBO1.Unbind();
 
-		// Gets ID of uniform called "scale"
-		GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
-
-		float rotation = 0.0f;
-		double prevTime = glfwGetTime();
-
+		// Enable depth buffer
 		glEnable(GL_DEPTH_TEST);
+
+		Camera camera(screenSize[0], screenSize[1], glm::vec3(0.0f, 0.0f, 2.0f));
 
 		/* Render Loop */
 		while (!glfwWindowShouldClose(window))
@@ -128,30 +130,11 @@ namespace Render {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			// Tell OpenGL which Shader Program we want to use
 			shaderProgram.Activate();
+			// Collect inputs from user
+			camera.Inputs(window);
+			// Transform coordinates based on camera position
+			camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
-			double crntTime = glfwGetTime();
-			if (crntTime - prevTime >= 1 / 60) {
-				rotation += 0.5f;
-				prevTime = crntTime;
-			}
-
-			glm::mat4 model = glm::mat4(1.0f);
-			glm::mat4 view = glm::mat4(1.0f);
-			glm::mat4 proj = glm::mat4(1.0f);
-
-			model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-			view = glm::translate(view, glm::vec3(0.0f, -0.5f, -2.0f));
-			proj = glm::perspective(glm::radians(45.0f), (float)(screenSize[0] / screenSize[1]), 0.1f, 100.0f);
-
-			int modelLoc = glGetUniformLocation(shaderProgram.ID, "model");
-			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-			int viewLoc = glGetUniformLocation(shaderProgram.ID, "view");
-			glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-			int projLoc = glGetUniformLocation(shaderProgram.ID, "proj");
-			glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(proj));
-
-			// Assign a value to the uniform [Must happen after Activate()]
-			glUniform1f(uniID, 0.5f);
 			// Bind the VAO so OpenGL knows to use it
 			VAO1.Bind();
 			// Draw primitives, number of indices, datatype of indices, index of indices

@@ -7,8 +7,8 @@
 #include <iostream>
 #include <thread>
 
-#include "Voxels/Brickgrid.h"
 #include "Renderer/RenderingEngine.hpp"
+#include "Voxels/Brickgrid.h"
 
 // SETTINGS
 int VIEWPORT_SIZE[] = { 800, 600 };
