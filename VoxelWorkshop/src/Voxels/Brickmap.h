@@ -28,6 +28,8 @@ private:
 	VisualData* __ptr32 shadingAttribute;
 	unsigned char colorLOD[3];
 
+	friend void generateMesh();
+
 public:
 	void linkMesh(VAO &VAO, unsigned int &indexArraySize);
 };
