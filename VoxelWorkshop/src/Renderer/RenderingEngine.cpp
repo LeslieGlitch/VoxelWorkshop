@@ -17,8 +17,6 @@
 #include "RenderingEngine.hpp"
 #include "Shader.h"
 #include "VAO.h"
-//#include "VBO.h"
-//#include "EBO.h"
 #include "Camera.h"
 
 #include "../Voxels/Brickgrid.h"
@@ -76,7 +74,7 @@ namespace Render {
 		unsigned int indexArraySize;
 
 		// Generates a mesh and links it to the VAO
-		map.generateMesh(VAO1, indexArraySize);
+		map.linkMesh(VAO1, indexArraySize);
 
 		// Enable depth buffer
 		glEnable(GL_DEPTH_TEST);

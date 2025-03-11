@@ -31,7 +31,7 @@ unsigned int indices[] =
 	2, 7, 6
 };
 
-void Brickmap::generateMesh(VAO &VAO, unsigned int &indexArraySize) {
+void Brickmap::linkMesh(VAO &VAO, unsigned int &indexArraySize) {
 	VAO.Bind();
 	// Generates Vertex Buffer Object and links it to vertices
 	VBO VBO1(&vertices[0], sizeof(vertices));

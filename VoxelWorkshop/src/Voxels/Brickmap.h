@@ -29,7 +29,7 @@ private:
 	unsigned char colorLOD[3];
 
 public:
-	void generateMesh(VAO &VAO, unsigned int &indexArraySize);
+	void linkMesh(VAO &VAO, unsigned int &indexArraySize);
 };
 
 #endif
