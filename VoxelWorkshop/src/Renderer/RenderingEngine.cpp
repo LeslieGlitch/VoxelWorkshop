@@ -21,40 +21,9 @@
 #include "EBO.h"
 #include "Camera.h"
 
-#include "../Math/Math.h"
-#include "../Voxels/Chunk.h"
+#include "../Voxels/Brickgrid.h"
 
 const unsigned int screenSize[] = { 800, 800 };
-
- // Vertices coordinates
-GLfloat vertices[] =
-{//    Coordinates		/     Colors           /   L/R - U/D - F/B
-	-0.5f,  0.0f, -0.5f,   0.00f, 0.00f, 0.00f, // L   - D   - B
-	 0.5f,  0.0f, -0.5f,   0.99f, 0.00f, 0.00f, // R   - D   - B
-	-0.5f,  1.0f, -0.5f,   0.00f, 0.99f, 0.00f, // L   - U   - B
-	 0.5f,  1.0f, -0.5f,   0.99f, 0.99f, 0.00f, // R   - U   - B
-	-0.5f,  0.0f,  0.5f,   0.00f, 0.00f, 0.99f, // L   - D   - F
-	 0.5f,  0.0f,  0.5f,   0.99f, 0.00f, 0.99f, // R   - D   - F
-	-0.5f,  1.0f,  0.5f,   0.00f, 0.99f, 0.99f, // L   - U   - F
-	 0.5f,  1.0f,  0.5f,   0.99f, 0.99f, 0.99f  // R   - U   - F
-};
-
-// Indices for vertices order
-GLuint indices[] =
-{
-	0, 3, 2,
-	0, 1, 3,
-	0, 2, 6,
-	0, 6, 4,
-	0, 4, 1,
-	1, 4, 5,
-	4, 6, 5,
-	5, 6, 7,
-	1, 5, 3,
-	3, 5, 7,
-	2, 3, 7,
-	2, 7, 6
-};
 
 namespace Render {
 	// local variables
@@ -89,7 +58,6 @@ namespace Render {
 		//Load GLAD so it configures OpenGL
 		gladLoadGL();
 		// Specify the viewport of OpenGL in the Window
-		// In this case the viewport goes from x = 0, y = 0, to x = 800, y = 800
 		glViewport(0, 0, screenSize[0], screenSize[1]);
 
 		/* Shaders */
@@ -101,10 +69,13 @@ namespace Render {
 		VAO VAO1;
 		VAO1.Bind();
 
+		Brickmap map;
+		miniMesh test = map.generateMesh();
+
 		// Generates Vertex Buffer Object and links it to vertices
-		VBO VBO1(vertices, sizeof(vertices));
+		VBO VBO1(test.vertexArrayStart, test.vertexArraySize);
 		// Generates Element Buffer Object and links it to indices
-		EBO EBO1(indices, sizeof(indices));
+		EBO EBO1(test.indexArrayStart, test.indexArraySize);
 
 		// Links VBO attributes (like coords and color) to VAO
 		VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
@@ -138,7 +109,7 @@ namespace Render {
 			// Bind the VAO so OpenGL knows to use it
 			VAO1.Bind();
 			// Draw primitives, number of indices, datatype of indices, index of indices
-			glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(int), GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, test.indexArraySize/sizeof(int), GL_UNSIGNED_INT, 0);
 			// Swap the back buffer with the front buffer
 			glfwSwapBuffers(window);
 			// Take care of all GLFW events
