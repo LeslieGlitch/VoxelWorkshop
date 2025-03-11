@@ -15,13 +15,6 @@
 // Size taken from brickmap paper
 const int BRICKMAP_SIZE = 8;
 
-struct miniMesh {
-	float* vertexArrayStart;
-	unsigned int vertexArraySize;
-	unsigned int* indexArrayStart;
-	unsigned int indexArraySize;
-};
-
 class Brickmap {
 private:
 	std::bitset<BRICKMAP_SIZE * BRICKMAP_SIZE * BRICKMAP_SIZE> solidMask;

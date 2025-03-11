@@ -7,10 +7,12 @@
 #ifndef VISUALDATA_H
 #define VISUALDATA_H
 
+#include <vector>
+
 class VisualData {
 private:
-	unsigned char color;
-	signed char normalVector;
+	std::vector<unsigned char> color;
+	std::vector<signed char> normalVector;
 };
 
 #endif

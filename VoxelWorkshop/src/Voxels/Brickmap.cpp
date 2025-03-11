@@ -4,34 +4,10 @@
 #include <vector>
 
 // Vertices coordinates
-std::vector<float> vertices =
-{//    Coordinates		/     Colors           /   L/R - U/D - F/B
-	-0.5f,  0.0f, -0.5f,   0.00f, 0.00f, 0.00f, // L   - D   - B
-	 0.5f,  0.0f, -0.5f,   0.99f, 0.00f, 0.00f, // R   - D   - B
-	-0.5f,  1.0f, -0.5f,   0.00f, 0.99f, 0.00f, // L   - U   - B
-	 0.5f,  1.0f, -0.5f,   0.99f, 0.99f, 0.00f, // R   - U   - B
-	-0.5f,  0.0f,  0.5f,   0.00f, 0.00f, 0.99f, // L   - D   - F
-	 0.5f,  0.0f,  0.5f,   0.99f, 0.00f, 0.99f, // R   - D   - F
-	-0.5f,  1.0f,  0.5f,   0.00f, 0.99f, 0.99f, // L   - U   - F
-	 0.5f,  1.0f,  0.5f,   0.99f, 0.99f, 0.99f  // R   - U   - F
-};
+std::vector<float> vertices = {};
 
 // Indices for vertices order
-std::vector <unsigned int> indices =
-{
-	0, 3, 2,
-	0, 1, 3,
-	0, 2, 6,
-	0, 6, 4,
-	0, 4, 1,
-	1, 4, 5,
-	4, 6, 5,
-	5, 6, 7,
-	1, 5, 3,
-	3, 5, 7,
-	2, 3, 7,
-	2, 7, 6
-};
+std::vector <unsigned int> indices = {};
 
 // Friend function declaration
 void generateMesh();
@@ -64,5 +40,41 @@ void Brickmap::linkMesh(VAO &VAO, unsigned int &indexArraySize) {
 }
 
 void generateMesh() {
+	float exampleVertices[] =
+	{//    Coordinates		/     Colors           /   L/R - U/D - F/B
+		-0.5f,  0.0f, -0.5f,   0.00f, 0.00f, 0.00f, // L   - D   - B
+		 0.5f,  0.0f, -0.5f,   0.99f, 0.00f, 0.00f, // R   - D   - B
+		-0.5f,  1.0f, -0.5f,   0.00f, 0.99f, 0.00f, // L   - U   - B
+		 0.5f,  1.0f, -0.5f,   0.99f, 0.99f, 0.00f, // R   - U   - B
+		-0.5f,  0.0f,  0.5f,   0.00f, 0.00f, 0.99f, // L   - D   - F
+		 0.5f,  0.0f,  0.5f,   0.99f, 0.00f, 0.99f, // R   - D   - F
+		-0.5f,  1.0f,  0.5f,   0.00f, 0.99f, 0.99f, // L   - U   - F
+		 0.5f,  1.0f,  0.5f,   0.99f, 0.99f, 0.99f  // R   - U   - F
+	};
+	
+	unsigned int exampleIndices[] =
+	{
+		0, 3, 2,
+		0, 1, 3,
+		0, 2, 6,
+		0, 6, 4,
+		0, 4, 1,
+		1, 4, 5,
+		4, 6, 5,
+		5, 6, 7,
+		1, 5, 3,
+		3, 5, 7,
+		2, 3, 7,
+		2, 7, 6
+	};
+
+	for (int i = 0; i < sizeof(exampleVertices) / sizeof(float); ++i) {
+		vertices.push_back(exampleVertices[i]);
+	}
+
+	for (int i = 0; i < sizeof(exampleIndices) / sizeof(unsigned int); ++i) {
+		indices.push_back(exampleIndices[i]);
+	}
+
 	return;
 }
