@@ -4,8 +4,6 @@
  * Include file for the Rendering Engine
  */
 
-#include <GLFW/glfw3.h>
-
 namespace Render {
 	// function declarations
 

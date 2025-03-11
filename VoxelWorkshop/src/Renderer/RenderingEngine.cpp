@@ -17,8 +17,8 @@
 #include "RenderingEngine.hpp"
 #include "Shader.h"
 #include "VAO.h"
-#include "VBO.h"
-#include "EBO.h"
+//#include "VBO.h"
+//#include "EBO.h"
 #include "Camera.h"
 
 #include "../Voxels/Brickgrid.h"
@@ -68,26 +68,15 @@ namespace Render {
 		// Generates Shader object using shaders defualt.vert and default.frag
 		Shader shaderProgram("src/Shaders/default.vert", "src/Shaders/default.frag");
 
-		// Generates Vertex Array Object and binds it
+		// Generates Vertex Array Object
 		VAO VAO1;
-		VAO1.Bind();
 
 		// Collect mesh from a brickmap
 		Brickmap map;
-		miniMesh test = map.generateMesh();
+		unsigned int indexArraySize;
 
-		// Generates Vertex Buffer Object and links it to vertices
-		VBO VBO1(test.vertexArrayStart, test.vertexArraySize);
-		// Generates Element Buffer Object and links it to indices
-		EBO EBO1(test.indexArrayStart, test.indexArraySize);
-
-		// Links VBO attributes (like coords and color) to VAO
-		VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
-		VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-		// Unbind all to prevent accidentally modifying them
-		VAO1.Unbind();
-		VBO1.Unbind();
-		EBO1.Unbind();
+		// Generates a mesh and links it to the VAO
+		map.generateMesh(VAO1, indexArraySize);
 
 		// Enable depth buffer
 		glEnable(GL_DEPTH_TEST);
@@ -111,7 +100,7 @@ namespace Render {
 			// Bind the VAO so OpenGL knows to use it
 			VAO1.Bind();
 			// Draw primitives, number of indices, datatype of indices, index of indices
-			glDrawElements(GL_TRIANGLES, test.indexArraySize/sizeof(int), GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, indexArraySize/sizeof(int), GL_UNSIGNED_INT, 0);
 			// Swap the back buffer with the front buffer
 			glfwSwapBuffers(window);
 			// Take care of all GLFW events
@@ -120,10 +109,9 @@ namespace Render {
 
 		/* Cleanup */
 
-		// Delete all the objects we've created
+		// Delete the vertex array object we've created
 		VAO1.Delete();
-		VBO1.Delete();
-		EBO1.Delete();
+		
 		shaderProgram.Delete();
 		// Delete window before ending the program
 		glfwDestroyWindow(window);

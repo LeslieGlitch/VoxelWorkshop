@@ -1,4 +1,5 @@
 #include "Brickmap.h"
+#include "../Renderer/EBO.h"
 
 // Vertices coordinates
 float vertices[] =
@@ -30,13 +31,25 @@ unsigned int indices[] =
 	2, 7, 6
 };
 
-miniMesh Brickmap::generateMesh() {
-	miniMesh result{
-		result.vertexArrayStart = &vertices[0],
-		result.vertexArraySize = sizeof(vertices),
-		result.indexArrayStart = &indices[0],
-		result.indexArraySize = sizeof(indices)
-	};
-	
-	return result;
+void Brickmap::generateMesh(VAO &VAO, unsigned int &indexArraySize) {
+	VAO.Bind();
+	// Generates Vertex Buffer Object and links it to vertices
+	VBO VBO1(&vertices[0], sizeof(vertices));
+	// Generates Element Buffer Object and links it to indices
+	EBO EBO1(&indices[0], sizeof(indices));
+
+	// Links VBO attributes (like coords and color) to VAO
+	VAO.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
+	VAO.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+
+	// Unbind all to prevent accidentally modifying them
+	VAO.Unbind();
+	VBO1.Unbind();
+	EBO1.Unbind();
+
+	// Clean up the VBO and EBO since they aren't needed anymore
+	VBO1.Delete();
+	EBO1.Delete();
+
+	return;
 }

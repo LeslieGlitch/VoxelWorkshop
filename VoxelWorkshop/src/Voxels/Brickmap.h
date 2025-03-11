@@ -10,6 +10,7 @@
 
 #include <bitset>
 #include "VisualData.h"
+#include "../Renderer/VAO.h"
 
 // Size taken from brickmap paper
 const int BRICKMAP_SIZE = 8;
@@ -28,7 +29,7 @@ private:
 	unsigned char colorLOD[3];
 
 public:
-	miniMesh generateMesh();
+	void generateMesh(VAO &VAO, unsigned int &indexArraySize);
 };
 
 #endif
