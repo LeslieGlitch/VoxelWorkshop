@@ -55,6 +55,9 @@ namespace Render {
 		// Introduce the window into the current context
 		glfwMakeContextCurrent(window);
 
+		// Set framerate
+		glfwSwapInterval(1);
+
 		//Load GLAD so it configures OpenGL
 		gladLoadGL();
 		// Specify the viewport of OpenGL in the Window
@@ -69,6 +72,7 @@ namespace Render {
 		VAO VAO1;
 		VAO1.Bind();
 
+		// Collect mesh from a brickmap
 		Brickmap map;
 		miniMesh test = map.generateMesh();
 
