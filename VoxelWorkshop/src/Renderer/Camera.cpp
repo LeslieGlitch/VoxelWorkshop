@@ -15,12 +15,17 @@ void Camera::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shade
 	glm::mat4 projection = glm::mat4(1.0f);
 
 	view = glm::lookAt(Position, Position + Orientation, Up);
-	projection = glm::perspective(glm::radians(FOVdeg), (float)(width / height), nearPlane, farPlane);
+	projection = glm::perspective(glm::radians(FOVdeg), ((float)width / height), nearPlane, farPlane);
 
 	glUniformMatrix4fv(glGetUniformLocation(shader.ID, uniform), 1, GL_FALSE, glm::value_ptr(projection * view));
 }
 
 void Camera::Inputs(GLFWwindow* window) {
+	// Exit program
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+		glfwSetWindowShouldClose(window, true);
+	}
+
 	// Keyboard input
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 		Position += speed * Orientation;
@@ -63,7 +68,7 @@ void Camera::Inputs(GLFWwindow* window) {
 
 		// calculate how much to rotate based on position
 		float rotX = sensitivity * (float)(mouseY - (height / 2)) / height;
-		float rotY = sensitivity * (float)(mouseX - (height / 2)) / height;
+		float rotY = sensitivity * (float)(mouseX - (width / 2)) / width;
 		glm::vec3 newOrientation = glm::rotate(Orientation, glm::radians(-rotX), glm::normalize(glm::cross(Orientation, Up)));
 
 		// Make sure camera cannot barrel roll
@@ -75,7 +80,7 @@ void Camera::Inputs(GLFWwindow* window) {
 		Orientation = glm::rotate(Orientation, glm::radians(-rotY), Up);
 
 		// teleport cursor to center of screen
-		glfwSetCursorPos(window, width / 2, height / 2);
+		glfwSetCursorPos(window, width / 2.0, height / 2.0);
 	}
 	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);

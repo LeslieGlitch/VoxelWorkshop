@@ -23,7 +23,7 @@
 
 #include "../Voxels/Brickgrid.h"
 
-const unsigned int screenSize[] = { 800, 800 };
+const unsigned int screenSize[] = { 1280, 720 };
 
 namespace Render {
 	// local variables
@@ -93,8 +93,6 @@ namespace Render {
 		/* Render Loop */
 		while (!glfwWindowShouldClose(window))
 		{
-			// Process user input
-			processInput(window);
 			// Specify the color of the background
 			glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 			// Clean the back buffer and assign the new color to it
@@ -128,32 +126,5 @@ namespace Render {
 		// Terminate GLFW before ending the program
 		glfwTerminate();
 		return 0;
-	}
-
-	/// @brief Starting setup for rendering engine
-	/// @return Returns true if an error occurs, false otherwise
-	bool init(int windowSize[]) {
-
-		return false;
-	}
-
-	/* Callback Functions */
-
-	void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-		// make sure width and height are nonzero
-		if (width  == 0) width  = 1;
-		if (height == 0) height = 1;
-
-		// update viewport size
-		glViewport(0, 0, width, height);
-		return;
-	}
-
-	/* Helper Functions */
-
-	void processInput(GLFWwindow* window) {
-		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-			glfwSetWindowShouldClose(window, true);
-		}
 	}
 }
