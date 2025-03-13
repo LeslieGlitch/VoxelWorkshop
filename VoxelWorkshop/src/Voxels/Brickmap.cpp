@@ -136,9 +136,6 @@ bool Brickmap::loadFromFile(const std::string& fileName) {
 			Brickmap::solidMask.set(i + j, bitInt[j]);
 		}
 	}
-	
-	// debug
-	std::cout << "Loaded from file:" << Brickmap::solidMask << "\n";
 
 	// Cleanup
 	file.close();
@@ -170,13 +167,8 @@ bool Brickmap::saveToFile(const std::string &fileName) {
 		for (int j = 0; j < 7; ++j) {
 			bitMask.set(j, Brickmap::solidMask[i + j]);
 		}
-		unsigned char outputChar = static_cast<unsigned char>(bitMask.to_ulong());
-		std::cout << "Character " << i / 8 << " is " << outputChar << "\n";
-		file << outputChar;
+		file << static_cast<unsigned char>(bitMask.to_ulong());
 	}
-
-	// debug
-	std::cout << "Saved to file   :" << Brickmap::solidMask << "\n";
 
 	// Cleanup
 	file.close();
