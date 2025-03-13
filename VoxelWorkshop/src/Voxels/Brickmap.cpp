@@ -1,6 +1,7 @@
 #include "Brickmap.h"
 #include "../Renderer/VBO.h"
 #include "../Renderer/EBO.h"
+#include <glm/glm.hpp>
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -15,13 +16,13 @@ std::vector <unsigned int> indices = {};
 std::string pathToRegions = "src/World/Region/";
 
 // Friend function declaration
-void generateMesh();
+void generateMesh(const glm::vec3 &offset);
 
-void Brickmap::linkMesh(VAO &VAO, unsigned int &indexArraySize) {
+void Brickmap::linkMesh(VAO &VAO, const glm::vec3 &offset, unsigned int &indexArraySize) {
 	VAO.Bind();
 
 	// Generates the mesh to be bound
-	generateMesh();
+	generateMesh(offset);
 	
 	// Generates Vertex Buffer Object and links it to vertices
 	VBO VBO1(&vertices[0], vertices.size() * sizeof(float));
@@ -44,7 +45,7 @@ void Brickmap::linkMesh(VAO &VAO, unsigned int &indexArraySize) {
 	return;
 }
 
-void generateMesh() {
+void generateMesh(const glm::vec3 &offset) {
 	float exampleVertices[] =
 	{//    Coordinates		/     Colors           /   L/R - U/D - F/B
 		-0.5f,  0.0f, -0.5f,   0.00f, 0.00f, 0.00f, // L   - D   - B
@@ -74,7 +75,27 @@ void generateMesh() {
 	};
 
 	for (int i = 0; i < sizeof(exampleVertices) / sizeof(float); ++i) {
-		vertices.push_back(exampleVertices[i]);
+		// Determine if value is X, Y, Z, or color
+		float coordOffset = 0;
+		switch (i % 6) {
+		case 0:
+			// X
+			coordOffset = offset.x;
+			break;
+		case 1:
+			// Y
+			coordOffset = offset.y;
+			break;
+		case 2:
+			// Z
+			coordOffset = offset.z;
+			break;
+		default:
+			// Color
+			break;
+		}
+
+		vertices.push_back(exampleVertices[i] + coordOffset);
 	}
 
 	for (int i = 0; i < sizeof(exampleIndices) / sizeof(unsigned int); ++i) {

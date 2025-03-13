@@ -9,6 +9,7 @@
 #define BRICKMAP_H
 
 #include <bitset>
+#include <glm/glm.hpp>
 #include "VisualData.h"
 #include "../Renderer/VAO.h"
 
@@ -21,10 +22,10 @@ private:
 	VisualData* __ptr32 shadingAttribute;
 	unsigned char colorLOD[3];
 
-	friend void generateMesh();
+	friend void generateMesh(const glm::vec3 &offset);
 
 public:
-	void linkMesh(VAO &VAO, unsigned int &indexArraySize);
+	void linkMesh(VAO &VAO, const glm::vec3 &offset, unsigned int &indexArraySize);
 
 	bool loadFromFile(const std::string &fileName);
 	bool saveToFile(const std::string &fileName);

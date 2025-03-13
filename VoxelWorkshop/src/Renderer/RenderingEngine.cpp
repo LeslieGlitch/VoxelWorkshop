@@ -77,7 +77,7 @@ namespace Render {
 		map.loadFromFile("region0.txt");
 
 		// Generates a mesh and links it to the VAO
-		map.linkMesh(VAO1, indexArraySize);
+		map.linkMesh(VAO1, glm::vec3(0.0, 0.0, 0.0), indexArraySize);
 
 		// Enable depth buffer
 		glEnable(GL_DEPTH_TEST);
