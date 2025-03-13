@@ -2,12 +2,17 @@
 #include "../Renderer/VBO.h"
 #include "../Renderer/EBO.h"
 #include <vector>
+#include <iostream>
+#include <fstream>
 
 // Vertices coordinates
 std::vector<float> vertices = {};
 
 // Indices for vertices order
 std::vector <unsigned int> indices = {};
+
+// Path to region files
+std::string pathToRegions = "src/World/Region/";
 
 // Friend function declaration
 void generateMesh();
@@ -77,4 +82,63 @@ void generateMesh() {
 	}
 
 	return;
+}
+
+bool Brickmap::loadFromFile(const std::string &fileName) {
+	// Open file
+	std::ifstream file(pathToRegions + fileName, std::ios::binary);
+
+	// Ensure file is open
+	if (!file.is_open()) {
+		std::cerr << "Error: File \"" << fileName << "\" failed to open!\n";
+
+		if (file.bad()) {
+			std::cerr << "Error: Badbit is set\n";
+		}
+		if (file.fail()) {
+			std::cerr << std::strerror(errno) << "\n";
+		}
+
+		return true;
+	}
+
+	// Read from data
+	file >> Brickmap::solidMask;
+	
+	// debug
+	std::cout << "Loaded from file:" << Brickmap::solidMask << "\n";
+
+	// Cleanup
+	file.close();
+	return false;
+}
+
+bool Brickmap::saveToFile(const std::string &fileName) {
+	// Open file
+	std::ofstream file;
+	file.open(pathToRegions + fileName, std::ios::binary | std::ios::trunc);
+
+	// Ensure file is open
+	if (!file.is_open()) {
+		std::cerr << "Error: File \"" << fileName << "\" failed to open!\n";
+
+		if (file.bad()) {
+			std::cerr << "Error: Badbit is set\n";
+		}
+		if (file.fail()) {
+			std::cerr << std::strerror(errno) << "\n";
+		}
+
+		return true;
+	}
+
+	// Fill with test data
+	file << Brickmap::solidMask;
+
+	// debug
+	std::cout << "Saved to file   :" << Brickmap::solidMask << "\n";
+
+	// Cleanup
+	file.close();
+	return false;
 }

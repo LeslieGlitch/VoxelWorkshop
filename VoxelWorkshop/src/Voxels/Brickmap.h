@@ -25,6 +25,9 @@ private:
 
 public:
 	void linkMesh(VAO &VAO, unsigned int &indexArraySize);
+
+	bool loadFromFile(const std::string &fileName);
+	bool saveToFile(const std::string &fileName);
 };
 
 #endif

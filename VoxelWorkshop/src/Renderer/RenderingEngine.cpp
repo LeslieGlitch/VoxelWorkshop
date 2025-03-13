@@ -73,6 +73,9 @@ namespace Render {
 		Brickmap map;
 		unsigned int indexArraySize;
 
+		map.saveToFile("region0.txt");
+		map.loadFromFile("region0.txt");
+
 		// Generates a mesh and links it to the VAO
 		map.linkMesh(VAO1, indexArraySize);
 
