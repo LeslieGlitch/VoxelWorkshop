@@ -45,7 +45,7 @@ void Brickmap::linkMesh(VAO &VAO, const glm::vec3 &offset, unsigned int &indexAr
 	return;
 }
 
-void generateMesh(const glm::vec3 &offset) {
+void generateMesh(const glm::vec3& offset) {
 	float exampleVertices[] =
 	{//    Coordinates		/     Colors           /   L/R - U/D - F/B
 		-0.5f,  0.0f, -0.5f,   0.00f, 0.00f, 0.00f, // L   - D   - B
@@ -57,7 +57,7 @@ void generateMesh(const glm::vec3 &offset) {
 		-0.5f,  1.0f,  0.5f,   0.00f, 0.99f, 0.99f, // L   - U   - F
 		 0.5f,  1.0f,  0.5f,   0.99f, 0.99f, 0.99f  // R   - U   - F
 	};
-	
+
 	unsigned int exampleIndices[] =
 	{
 		0, 3, 2,
@@ -105,9 +105,9 @@ void generateMesh(const glm::vec3 &offset) {
 	return;
 }
 
-bool Brickmap::loadFromFile(const std::string &fileName) {
+bool Brickmap::loadFromFile(const std::string& fileName) {
 	// Open file
-	std::ifstream file(pathToRegions + fileName, std::ios::binary);
+	std::ifstream file(pathToRegions + fileName);
 
 	// Ensure file is open
 	if (!file.is_open()) {
@@ -123,8 +123,19 @@ bool Brickmap::loadFromFile(const std::string &fileName) {
 		return true;
 	}
 
-	// Read from data
-	file >> Brickmap::solidMask;
+	// Clear old solidMask data
+	Brickmap::solidMask.reset();
+
+	// Load new solidMask data
+	for (int i = 0; i < BRICKMAP_SIZE * BRICKMAP_SIZE * BRICKMAP_SIZE; i += 8) {
+		unsigned char bitmask;
+		file >> bitmask;
+		std::bitset<8> bitInt(static_cast<unsigned int>(bitmask));
+
+		for (int j = 0; j < 8; ++j) {
+			Brickmap::solidMask.set(i + j, bitInt[j]);
+		}
+	}
 	
 	// debug
 	std::cout << "Loaded from file:" << Brickmap::solidMask << "\n";
@@ -153,8 +164,16 @@ bool Brickmap::saveToFile(const std::string &fileName) {
 		return true;
 	}
 
-	// Fill with test data
-	file << Brickmap::solidMask;
+	// Fill with solidMask data
+	for (int i = 0; i < BRICKMAP_SIZE * BRICKMAP_SIZE * BRICKMAP_SIZE; i += 8) {
+		std::bitset<8> bitMask;
+		for (int j = 0; j < 7; ++j) {
+			bitMask.set(j, Brickmap::solidMask[i + j]);
+		}
+		unsigned char outputChar = static_cast<unsigned char>(bitMask.to_ulong());
+		std::cout << "Character " << i / 8 << " is " << outputChar << "\n";
+		file << outputChar;
+	}
 
 	// debug
 	std::cout << "Saved to file   :" << Brickmap::solidMask << "\n";
