@@ -166,10 +166,6 @@ bool Brickmap::loadFromFile(const std::string& fileName) {
 		}
 	}
 
-	// debug, remove when fileread is fixed
-	Brickmap::solidMask.set();
-	std::cout << Brickmap::solidMask << "\n";
-
 	// Cleanup
 	file.close();
 	return false;
