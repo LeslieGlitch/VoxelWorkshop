@@ -6,6 +6,8 @@
 #include <iostream>
 #include <fstream>
 
+const unsigned int totalVolume = BRICKMAP_SIZE * BRICKMAP_SIZE * BRICKMAP_SIZE;
+
 // Vertices coordinates
 std::vector<float> vertices = {};
 
@@ -14,9 +16,6 @@ std::vector <unsigned int> indices = {};
 
 // Path to region files
 std::string pathToRegions = "src/World/Region/";
-
-// Friend function declaration
-void generateMesh(const glm::vec3 &offset);
 
 void Brickmap::linkMesh(VAO &VAO, const glm::vec3 &offset, unsigned int &indexArraySize) {
 	VAO.Bind();
@@ -45,20 +44,20 @@ void Brickmap::linkMesh(VAO &VAO, const glm::vec3 &offset, unsigned int &indexAr
 	return;
 }
 
-void generateMesh(const glm::vec3& offset) {
-	float exampleVertices[] =
+void Brickmap::generateMesh(const glm::vec3& offset) {
+	const float baseVertices[] =
 	{//    Coordinates		/     Colors           /   L/R - U/D - F/B
-		-0.5f,  0.0f, -0.5f,   0.00f, 0.00f, 0.00f, // L   - D   - B
-		 0.5f,  0.0f, -0.5f,   0.99f, 0.00f, 0.00f, // R   - D   - B
-		-0.5f,  1.0f, -0.5f,   0.00f, 0.99f, 0.00f, // L   - U   - B
-		 0.5f,  1.0f, -0.5f,   0.99f, 0.99f, 0.00f, // R   - U   - B
-		-0.5f,  0.0f,  0.5f,   0.00f, 0.00f, 0.99f, // L   - D   - F
-		 0.5f,  0.0f,  0.5f,   0.99f, 0.00f, 0.99f, // R   - D   - F
-		-0.5f,  1.0f,  0.5f,   0.00f, 0.99f, 0.99f, // L   - U   - F
-		 0.5f,  1.0f,  0.5f,   0.99f, 0.99f, 0.99f  // R   - U   - F
+		 0.0f,  0.0f,  0.0f,   0.00f, 0.00f, 0.00f, // L   - D   - B
+		 1.0f,  0.0f,  0.0f,   0.00f, 0.00f, 0.00f, // R   - D   - B
+		 0.0f,  1.0f,  0.0f,   0.00f, 0.00f, 0.00f, // L   - U   - B
+		 1.0f,  1.0f,  0.0f,   0.00f, 0.00f, 0.00f, // R   - U   - B
+		 0.0f,  0.0f,  1.0f,   0.00f, 0.00f, 0.00f, // L   - D   - F
+		 1.0f,  0.0f,  1.0f,   0.00f, 0.00f, 0.00f, // R   - D   - F
+		 0.0f,  1.0f,  1.0f,   0.00f, 0.00f, 0.00f, // L   - U   - F
+		 1.0f,  1.0f,  1.0f,   0.00f, 0.00f, 0.00f  // R   - U   - F
 	};
 
-	unsigned int exampleIndices[] =
+	const unsigned int baseIndices[] =
 	{
 		0, 3, 2,
 		0, 1, 3,
@@ -74,34 +73,64 @@ void generateMesh(const glm::vec3& offset) {
 		2, 7, 6
 	};
 
-	for (int i = 0; i < sizeof(exampleVertices) / sizeof(float); ++i) {
-		// Determine if value is X, Y, Z, or color
-		float coordOffset = 0;
-		switch (i % 6) {
-		case 0:
-			// X
-			coordOffset = offset.x;
-			break;
-		case 1:
-			// Y
-			coordOffset = offset.y;
-			break;
-		case 2:
-			// Z
-			coordOffset = offset.z;
-			break;
-		default:
-			// Color
-			break;
+	for (int i = 0; i < totalVolume; ++i) {
+		// Only create cubes for filled voxels
+		if (Brickmap::solidMask[i]) {
+			// Get the local coordinates within the brickmap
+			glm::vec3 mapCoords(i / (BRICKMAP_SIZE * BRICKMAP_SIZE), (i / BRICKMAP_SIZE) % BRICKMAP_SIZE, i % BRICKMAP_SIZE);
+			//std::cout << "Voxel coords: x=" << mapCoords.x << ", y=" << mapCoords.y << ", z=" << mapCoords.z << "\n";
+			unsigned int baseIndex = vertices.size() / 6;
+			//std::cout << "Base Index: " << baseIndex << "\n";
+
+			glm::vec3 color(static_cast<float>(mapCoords.x) / (BRICKMAP_SIZE - 1), static_cast<float>(mapCoords.y) / (BRICKMAP_SIZE - 1), static_cast<float>(mapCoords.z) / (BRICKMAP_SIZE - 1));
+			//std::cout << "Voxel color: r=" << color.r << ", g=" << color.g << ", b=" << color.b << "\n";
+
+			// Calculate the voxel offset based on local coords and chunk offset
+			for (int j = 0; j < sizeof(baseVertices) / sizeof(float); ++j) {
+				// Determine if value is X, Y, Z, or color
+				float coordOffset = 0.0f;
+				switch (j % 6) {
+				case 0:
+					// X
+					coordOffset = offset.x + mapCoords.x;
+					break;
+				case 1:
+					// Y
+					coordOffset = offset.y + mapCoords.y;
+					break;
+				case 2:
+					// Z
+					coordOffset = offset.z + mapCoords.z;
+					break;
+				case 3:
+					// R
+					coordOffset = color.r;
+					break;
+				case 4:
+					// G
+					coordOffset = color.g;
+					break;
+				case 5:
+					// B
+					coordOffset = color.b;
+					break;
+				default:
+					std::cout << "Switch statement broke; default option selected!\n";
+				}
+
+				vertices.push_back(baseVertices[j] + coordOffset);
+			}
+
+			for (int j = 0; j < sizeof(baseIndices) / sizeof(unsigned int); ++j) {
+				indices.push_back(baseIndices[j] + baseIndex);
+			}
 		}
-
-		vertices.push_back(exampleVertices[i] + coordOffset);
+		else {
+			glm::vec3 mapCoords(i / (BRICKMAP_SIZE * BRICKMAP_SIZE), (i / BRICKMAP_SIZE) % BRICKMAP_SIZE, i % BRICKMAP_SIZE);
+			std::cout << "Missing voxel " << i << " with coordinates (" << mapCoords.x << ", " << mapCoords.y << ", " << mapCoords.z << ")\n";
+		}
 	}
-
-	for (int i = 0; i < sizeof(exampleIndices) / sizeof(unsigned int); ++i) {
-		indices.push_back(exampleIndices[i]);
-	}
-
+	
 	return;
 }
 
@@ -127,15 +156,19 @@ bool Brickmap::loadFromFile(const std::string& fileName) {
 	Brickmap::solidMask.reset();
 
 	// Load new solidMask data
-	for (int i = 0; i < BRICKMAP_SIZE * BRICKMAP_SIZE * BRICKMAP_SIZE; i += 8) {
+	for (int i = 0; i < totalVolume / 8; ++i) {
 		unsigned char bitmask;
 		file >> bitmask;
 		std::bitset<8> bitInt(static_cast<unsigned int>(bitmask));
 
 		for (int j = 0; j < 8; ++j) {
-			Brickmap::solidMask.set(i + j, bitInt[j]);
+			Brickmap::solidMask.set((8 * i) + j, bitInt[j]);
 		}
 	}
+
+	// debug, remove when fileread is fixed
+	Brickmap::solidMask.set();
+	std::cout << Brickmap::solidMask << "\n";
 
 	// Cleanup
 	file.close();
@@ -162,7 +195,7 @@ bool Brickmap::saveToFile(const std::string &fileName) {
 	}
 
 	// Fill with solidMask data
-	for (int i = 0; i < BRICKMAP_SIZE * BRICKMAP_SIZE * BRICKMAP_SIZE; i += 8) {
+	for (int i = 0; i < totalVolume; i += 8) {
 		std::bitset<8> bitMask;
 		for (int j = 0; j < 7; ++j) {
 			bitMask.set(j, Brickmap::solidMask[i + j]);

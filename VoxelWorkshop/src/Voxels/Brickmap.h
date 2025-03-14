@@ -22,7 +22,7 @@ private:
 	VisualData* __ptr32 shadingAttribute;
 	unsigned char colorLOD[3];
 
-	friend void generateMesh(const glm::vec3 &offset);
+	void generateMesh(const glm::vec3 &offset);
 
 public:
 	void linkMesh(VAO &VAO, const glm::vec3 &offset, unsigned int &indexArraySize);
