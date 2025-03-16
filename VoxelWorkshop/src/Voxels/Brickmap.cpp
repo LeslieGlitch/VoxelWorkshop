@@ -125,10 +125,6 @@ void Brickmap::generateMesh(const glm::vec3& offset) {
                 indices.push_back(baseIndices[j] + baseIndex);
             }
         }
-        else {
-            glm::vec3 mapCoords(i / (BRICKMAP_SIZE * BRICKMAP_SIZE), (i / BRICKMAP_SIZE) % BRICKMAP_SIZE, i % BRICKMAP_SIZE);
-            std::cout << "Missing voxel " << i << " with coordinates (" << mapCoords.x << ", " << mapCoords.y << ", " << mapCoords.z << ")\n";
-        }
     }
     
     return;
