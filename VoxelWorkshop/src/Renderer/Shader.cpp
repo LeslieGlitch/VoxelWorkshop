@@ -1,90 +1,90 @@
 #include "Shader.h"
 
 std::string get_file_contents(const char* filename) {
-	// open file
-	std::ifstream in(filename, std::ios::binary);
+    // open file
+    std::ifstream in(filename, std::ios::binary);
 
-	// guard clause: file not opened
-	if (!in) {
-		throw(errno);
-	}
+    // guard clause: file not opened
+    if (!in) {
+        throw(errno);
+    }
 
-	// read file contents to string
-	std::string contents;
-	in.seekg(0, std::ios::end);
-	contents.resize(in.tellg());
-	in.seekg(0, std::ios::beg);
-	in.read(&contents[0], contents.size());
+    // read file contents to string
+    std::string contents;
+    in.seekg(0, std::ios::end);
+    contents.resize(in.tellg());
+    in.seekg(0, std::ios::beg);
+    in.read(&contents[0], contents.size());
 
-	// close file
-	in.close();
+    // close file
+    in.close();
 
-	return(contents);
+    return(contents);
 }
 
 Shader::Shader(const char* vertexFile, const char* fragmentFile) {
-	// Read vertexFile and fragmentFile and store the strings
-	std::string vertexCode = get_file_contents(vertexFile);
-	std::string fragmentCode = get_file_contents(fragmentFile);
+    // Read vertexFile and fragmentFile and store the strings
+    std::string vertexCode = get_file_contents(vertexFile);
+    std::string fragmentCode = get_file_contents(fragmentFile);
 
-	// Convert the shader source strings into character arrays
-	const char* vertexSource = vertexCode.c_str();
-	const char* fragmentSource = fragmentCode.c_str();
+    // Convert the shader source strings into character arrays
+    const char* vertexSource = vertexCode.c_str();
+    const char* fragmentSource = fragmentCode.c_str();
 
-	// Create Vertex Shader Object and get its reference
-	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	// Attach Vertex Shader source to the Vertex Shader Object
-	glShaderSource(vertexShader, 1, &vertexSource, NULL);
-	// Compile the Vertex Shader into machine code
-	glCompileShader(vertexShader);
-	compileErrors(vertexShader, "VERTEX");
+    // Create Vertex Shader Object and get its reference
+    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    // Attach Vertex Shader source to the Vertex Shader Object
+    glShaderSource(vertexShader, 1, &vertexSource, NULL);
+    // Compile the Vertex Shader into machine code
+    glCompileShader(vertexShader);
+    compileErrors(vertexShader, "VERTEX");
 
-	// Create Fragment Shader Object and get its reference
-	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	// Attach Fragment Shader source to the Fragment Shader Object
-	glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
-	// Compile the Vertex Shader into machine code
-	glCompileShader(fragmentShader);
-	compileErrors(fragmentShader, "FRAGMENT");
+    // Create Fragment Shader Object and get its reference
+    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    // Attach Fragment Shader source to the Fragment Shader Object
+    glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
+    // Compile the Vertex Shader into machine code
+    glCompileShader(fragmentShader);
+    compileErrors(fragmentShader, "FRAGMENT");
 
-	// Create Shader Program Object and get its reference
-	ID = glCreateProgram();
-	// Attach the Vertex and Fragment Shaders to the Shader Program
-	glAttachShader(ID, vertexShader);
-	glAttachShader(ID, fragmentShader);
-	// Wrap-up/Link all the shaders together into the Shader Program
-	glLinkProgram(ID);
-	compileErrors(ID, "PROGRAM");
+    // Create Shader Program Object and get its reference
+    ID = glCreateProgram();
+    // Attach the Vertex and Fragment Shaders to the Shader Program
+    glAttachShader(ID, vertexShader);
+    glAttachShader(ID, fragmentShader);
+    // Wrap-up/Link all the shaders together into the Shader Program
+    glLinkProgram(ID);
+    compileErrors(ID, "PROGRAM");
 
-	// Delete the now useless Vertex and Fragment Shader objects
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
+    // Delete the now useless Vertex and Fragment Shader objects
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
 }
 
 void Shader::Activate() {
-	glUseProgram(ID);
+    glUseProgram(ID);
 }
 
 void Shader::Delete() {
-	glDeleteProgram(ID);
+    glDeleteProgram(ID);
 }
 
 void Shader::compileErrors(unsigned int shader, const char* type) {
-	GLint hasCompiled;
-	char infoLog[1024];
+    GLint hasCompiled;
+    char infoLog[1024];
 
-	if (type != "PROGRAM") {
-		glGetShaderiv(shader, GL_COMPILE_STATUS, &hasCompiled);
-		if (hasCompiled == GL_FALSE) {
-			glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-			std::cout << "SHADER_COMPILATION_ERROR for: " << type << "\n" << std::endl;
-		}
-	}
-	else {
-		glGetProgramiv(shader, GL_COMPILE_STATUS, &hasCompiled);
-		if (hasCompiled == GL_FALSE) {
-			glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-			std::cout << "SHADER_LINKING_ERROR for: " << type << "\n" << std::endl;
-		}
-	}
+    if (type != "PROGRAM") {
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &hasCompiled);
+        if (hasCompiled == GL_FALSE) {
+            glGetShaderInfoLog(shader, 1024, NULL, infoLog);
+            std::cout << "SHADER_COMPILATION_ERROR for: " << type << "\n" << std::endl;
+        }
+    }
+    else {
+        glGetProgramiv(shader, GL_COMPILE_STATUS, &hasCompiled);
+        if (hasCompiled == GL_FALSE) {
+            glGetProgramInfoLog(shader, 1024, NULL, infoLog);
+            std::cout << "SHADER_LINKING_ERROR for: " << type << "\n" << std::endl;
+        }
+    }
 }

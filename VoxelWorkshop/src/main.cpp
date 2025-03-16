@@ -15,11 +15,11 @@ int VIEWPORT_SIZE[] = { 800, 600 };
 const int MAX_FRAMERATE = 60; // in fps
 
 int main() {
-	// Start other threads
-	std::thread RenderThread(Render::render, MAX_FRAMERATE, VIEWPORT_SIZE);
+    // Start other threads
+    std::thread RenderThread(Render::render, MAX_FRAMERATE, VIEWPORT_SIZE);
 
-	// wait for RenderThread to terminate before continuing
-	RenderThread.join();
+    // wait for RenderThread to terminate before continuing
+    RenderThread.join();
 
-	return 0;
+    return 0;
 }

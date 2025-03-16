@@ -11,8 +11,8 @@
 
 class VisualData {
 private:
-	std::vector<unsigned char> color;
-	std::vector<signed char> normalVector;
+    std::vector<unsigned char> color;
+    std::vector<signed char> normalVector;
 };
 
 #endif

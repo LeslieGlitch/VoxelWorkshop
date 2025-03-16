@@ -14,7 +14,7 @@ const int BRICKGRID_SIZE = 128;
 
 class Brickgrid {
 private:
-	Brickmap* __ptr32 grid[BRICKGRID_SIZE * BRICKGRID_SIZE * BRICKGRID_SIZE];
+    Brickmap* __ptr32 grid[BRICKGRID_SIZE * BRICKGRID_SIZE * BRICKGRID_SIZE];
 };
 
 #endif
