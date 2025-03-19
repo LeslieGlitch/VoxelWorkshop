@@ -58,8 +58,13 @@ namespace Render {
 
         //Load GLAD so it configures OpenGL
         gladLoadGL();
+
         // Specify the viewport of OpenGL in the Window
         glViewport(0, 0, screenSize[0], screenSize[1]);
+
+        // Enable culling
+        glEnable(GL_CULL_FACE);
+        glFrontFace(GL_CW);
 
         /* Shaders */
 
