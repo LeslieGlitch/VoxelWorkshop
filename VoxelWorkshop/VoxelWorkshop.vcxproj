@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Physics\PhysicsEngine.cpp" />
     <ClCompile Include="src\Renderer\Camera.cpp" />
     <ClCompile Include="src\Voxels\Brickgrid.cpp" />
     <ClCompile Include="src\Voxels\Brickmap.cpp" />
@@ -151,6 +152,7 @@
     <None Include="src\Shaders\default.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Physics\PhysicsEngine.hpp" />
     <ClInclude Include="src\Renderer\Camera.h" />
     <ClInclude Include="src\Voxels\Brickgrid.h" />
     <ClInclude Include="src\Voxels\Brickmap.h" />

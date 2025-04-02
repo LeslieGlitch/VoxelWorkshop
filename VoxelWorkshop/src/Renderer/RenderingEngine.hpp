@@ -4,6 +4,9 @@
  * Include file for the Rendering Engine
  */
 
+#ifndef RENDERINGENGINE_HPP
+#define RENDERINGENGINE_HPP
+
 namespace Render {
     // function declarations
 
@@ -12,3 +15,5 @@ namespace Render {
     /// @return Returns true if an error occurs, false otherwise
     bool render(int, int[]);
 }
+
+#endif
