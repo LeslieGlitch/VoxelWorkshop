@@ -5,6 +5,7 @@
  */
 
 #include <iostream>
+#include "PhysicsEngine.hpp"
 
 namespace Physics {
     bool physics(int tickrate) {
