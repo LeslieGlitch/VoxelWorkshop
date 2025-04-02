@@ -136,14 +136,12 @@
     <ClCompile Include="src\Voxels\Brickgrid.cpp" />
     <ClCompile Include="src\Voxels\Brickmap.cpp" />
     <ClCompile Include="src\Renderer\EBO.cpp" />
-    <ClCompile Include="src\Math\Matrix4.cpp" />
     <ClCompile Include="src\Renderer\RenderingEngine.cpp" />
     <ClCompile Include="src\Renderer\Shader.cpp" />
     <ClCompile Include="src\Voxels\Chunk.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Voxels\Voxel.cpp" />
-    <ClCompile Include="src\Math\Vector3.cpp" />
     <ClCompile Include="src\Renderer\VBO.cpp" />
     <ClCompile Include="src\Renderer\VAO.cpp" />
   </ItemGroup>
@@ -157,14 +155,11 @@
     <ClInclude Include="src\Voxels\Brickgrid.h" />
     <ClInclude Include="src\Voxels\Brickmap.h" />
     <ClInclude Include="src\Renderer\EBO.h" />
-    <ClInclude Include="src\Math\Math.h" />
-    <ClInclude Include="src\Math\Matrix4.h" />
     <ClInclude Include="src\Renderer\RenderingEngine.hpp" />
     <ClInclude Include="src\Renderer\Shader.h" />
     <ClInclude Include="src\Voxels\Chunk.h" />
     <ClInclude Include="src\Voxels\VisualData.h" />
     <ClInclude Include="src\Voxels\Voxel.h" />
-    <ClInclude Include="src\Math\Vector3.h" />
     <ClInclude Include="src\Renderer\VBO.h" />
     <ClInclude Include="src\Renderer\VAO.h" />
   </ItemGroup>
