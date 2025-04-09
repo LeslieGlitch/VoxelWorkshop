@@ -22,9 +22,8 @@ private:
     VisualData* __ptr32 shadingAttribute;
     unsigned char colorLOD[3];
 
-    void generateMesh(const glm::vec3 &offset);
-
 public:
+    void generateMesh(const glm::vec3 &offset);
     void linkMesh(VAO &VAO, const glm::vec3 &offset, unsigned int &indexArraySize);
 
     bool loadFromFile(const std::string &fileName);
