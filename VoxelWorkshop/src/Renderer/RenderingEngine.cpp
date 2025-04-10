@@ -20,6 +20,7 @@
 #include "Camera.h"
 
 #include "../Voxels/Brickgrid.h"
+#include "../Physics/Object.h"
 
 const unsigned int screenSize[] = { 1280, 720 };
 
@@ -71,23 +72,15 @@ namespace Render {
         // Generates Shader object using shaders defualt.vert and default.frag
         Shader shaderProgram("src/Shaders/default.vert", "src/Shaders/default.frag");
 
-        // Generates Vertex Array Object
-        VAO VAO1;
-
-        // Collect mesh from a brickmap
-        Brickmap map;
-        unsigned int indexArraySize;
-
-        map.loadFromFile("region0.txt");
-        //map.saveToFile("region0.txt");
-
-        // Generates a mesh and links it to the VAO
-        map.linkMesh(VAO1, glm::vec3(0.0, 0.0, 0.0), indexArraySize);
-
         // Enable depth buffer
         glEnable(GL_DEPTH_TEST);
 
-        Camera camera(screenSize[0], screenSize[1], glm::vec3(0.0f, 0.0f, 2.0f));
+        Camera camera(screenSize[0], screenSize[1], glm::vec3(6.0f, 6.0f, 6.0f));
+
+        // Test object for movement
+        Object hSphere;
+        hSphere.setPosition(glm::vec3(-4.0, -4.0, -4.0));
+        double time = 0.0;
 
         /* Render Loop */
         while (!glfwWindowShouldClose(window))
@@ -103,10 +96,11 @@ namespace Render {
             // Transform coordinates based on camera position
             camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
-            // Bind the VAO so OpenGL knows to use it
-            VAO1.Bind();
-            // Draw primitives, number of indices, datatype of indices, index of indices
-            glDrawElements(GL_TRIANGLES, indexArraySize/sizeof(int), GL_UNSIGNED_INT, 0);
+            // Bob test object up and down
+            time += 0.01;
+            hSphere.setPosition(glm::vec3(-4.0, -4.0 + glm::sin(time), -4.0));
+
+            hSphere.render();
             // Swap the back buffer with the front buffer
             glfwSwapBuffers(window);
             // Take care of all GLFW events
@@ -114,9 +108,6 @@ namespace Render {
         }
 
         /* Cleanup */
-
-        // Delete the vertex array object we've created
-        VAO1.Delete();
         
         shaderProgram.Delete();
         // Delete window before ending the program

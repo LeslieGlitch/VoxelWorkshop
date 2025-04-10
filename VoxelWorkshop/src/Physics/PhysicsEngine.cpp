@@ -17,6 +17,7 @@ namespace Physics {
         // Main Physics Loop
         while (!quitScene) {
             ///@TODO iterate over objects and call update()
+            quitScene = true;
         }
 
         // Cleanup

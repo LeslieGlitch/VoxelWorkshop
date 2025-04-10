@@ -29,8 +29,15 @@ public:
     // The brickmap model
     Brickmap structure;
 
-    // Contructor
+    /// @brief Default Constructor
+    Object();
+
+    /// @brief Contructor with Brickmap
     Object(Brickmap structure);
+
+    /// @brief Updates the object position and regenerates the mesh
+    /// @param position new position for the object
+    void setPosition(glm::vec3 position);
 
     /// @brief Renders the game object
     void render();

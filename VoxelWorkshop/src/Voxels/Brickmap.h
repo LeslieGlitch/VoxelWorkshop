@@ -19,12 +19,16 @@ const int BRICKMAP_SIZE = 8;
 class Brickmap {
 private:
     std::bitset<BRICKMAP_SIZE * BRICKMAP_SIZE * BRICKMAP_SIZE> solidMask;
-    VisualData* __ptr32 shadingAttribute;
-    unsigned char colorLOD[3];
+
+    //VisualData* __ptr32 shadingAttribute;
+    //unsigned char colorLOD[3];
 
 public:
-    void generateMesh(const glm::vec3 &offset);
-    void linkMesh(VAO &VAO, const glm::vec3 &offset, unsigned int &indexArraySize);
+    Brickmap();
+    ~Brickmap();
+    VAO VAO;
+    unsigned int generateMesh(const glm::vec3 &offset);
+    void linkMesh();
 
     bool loadFromFile(const std::string &fileName);
     bool saveToFile(const std::string &fileName);

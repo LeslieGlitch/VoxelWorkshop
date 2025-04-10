@@ -1,4 +1,5 @@
 #include "Brickmap.h"
+#include "../Renderer/VAO.h"
 #include "../Renderer/VBO.h"
 #include "../Renderer/EBO.h"
 #include <glm/glm.hpp>
@@ -17,12 +18,18 @@ std::vector <unsigned int> indices = {};
 // Path to region files
 std::string pathToRegions = "src/World/Region/";
 
-void Brickmap::linkMesh(VAO &VAO, const glm::vec3 &offset, unsigned int &indexArraySize) {
+Brickmap::Brickmap() {
+    return;
+}
+
+Brickmap::~Brickmap() {
+    // Delete the vertex array object we've created
+    VAO.Delete();
+}
+
+void Brickmap::linkMesh() {
     VAO.Bind();
 
-    // Generates the mesh to be bound
-    generateMesh(offset);
-    
     // Generates Vertex Buffer Object and links it to vertices
     VBO VBO1(&vertices[0], vertices.size() * sizeof(float));
     // Generates Element Buffer Object and links it to indices
@@ -44,7 +51,7 @@ void Brickmap::linkMesh(VAO &VAO, const glm::vec3 &offset, unsigned int &indexAr
     return;
 }
 
-void Brickmap::generateMesh(const glm::vec3& offset) {
+unsigned int Brickmap::generateMesh(const glm::vec3& offset) {
     const float baseVertices[] =
     {//    Coordinates		/     Colors           /   L/R - U/D - F/B
          0.0f,  0.0f,  0.0f,   0.00f, 0.00f, 0.00f, // L   - D   - B
@@ -72,6 +79,10 @@ void Brickmap::generateMesh(const glm::vec3& offset) {
         2, 3, 7,
         2, 7, 6
     };
+
+    // Clear previous vertex/index list
+    vertices = {};
+    indices = {};
 
     for (int i = 0; i < totalVolume; ++i) {
         // Only create cubes for filled voxels
@@ -127,7 +138,7 @@ void Brickmap::generateMesh(const glm::vec3& offset) {
         }
     }
     
-    return;
+    return indices.size();
 }
 
 bool Brickmap::loadFromFile(const std::string& fileName) {
