@@ -20,7 +20,7 @@ Object::Object(Brickmap structure) {
     Object::structure = structure;
 }
 
-void Object::setPosition(const LocationData& location) {
+void Object::setTransformation(const LocationData& location) {
     Object::location = location;
     indexArraySize = Object::structure.generateMesh(location);
     // Link mesh to the VAO

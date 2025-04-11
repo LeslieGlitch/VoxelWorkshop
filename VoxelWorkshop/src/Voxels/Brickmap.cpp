@@ -3,6 +3,8 @@
 #include "../Renderer/VBO.h"
 #include "../Renderer/EBO.h"
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -54,15 +56,15 @@ void Brickmap::linkMesh() {
 /// @TODO update mesh generation to use matrices instead of half-baked switch statement
 unsigned int Brickmap::generateMesh(const LocationData& location) {
     const float baseVertices[] =
-    {//    Coordinates		/     Colors           /   L/R - U/D - F/B
-         0.0f,  0.0f,  0.0f,   0.00f, 0.00f, 0.00f, // L   - D   - B
-         1.0f,  0.0f,  0.0f,   0.00f, 0.00f, 0.00f, // R   - D   - B
-         0.0f,  1.0f,  0.0f,   0.00f, 0.00f, 0.00f, // L   - U   - B
-         1.0f,  1.0f,  0.0f,   0.00f, 0.00f, 0.00f, // R   - U   - B
-         0.0f,  0.0f,  1.0f,   0.00f, 0.00f, 0.00f, // L   - D   - F
-         1.0f,  0.0f,  1.0f,   0.00f, 0.00f, 0.00f, // R   - D   - F
-         0.0f,  1.0f,  1.0f,   0.00f, 0.00f, 0.00f, // L   - U   - F
-         1.0f,  1.0f,  1.0f,   0.00f, 0.00f, 0.00f  // R   - U   - F
+    {//    Coordinates     //   L/R - U/D - F/B
+         0.0f,  0.0f,  0.0f, // L   - D   - B
+         1.0f,  0.0f,  0.0f, // R   - D   - B
+         0.0f,  1.0f,  0.0f, // L   - U   - B
+         1.0f,  1.0f,  0.0f, // R   - U   - B
+         0.0f,  0.0f,  1.0f, // L   - D   - F
+         1.0f,  0.0f,  1.0f, // R   - D   - F
+         0.0f,  1.0f,  1.0f, // L   - U   - F
+         1.0f,  1.0f,  1.0f  // R   - U   - F
     };
 
     const unsigned int baseIndices[] =
@@ -81,6 +83,9 @@ unsigned int Brickmap::generateMesh(const LocationData& location) {
         2, 7, 6
     };
 
+    // Temporary static color, @TODO replace with material color
+    glm::vec3 color(0.0f, 1.0f, 0.0f);
+
     // Clear previous vertex/index list
     vertices = {};
     indices = {};
@@ -90,47 +95,39 @@ unsigned int Brickmap::generateMesh(const LocationData& location) {
         if (Brickmap::solidMask[i]) {
             // Get the local coordinates within the brickmap
             glm::vec3 mapCoords(i / (BRICKMAP_SIZE * BRICKMAP_SIZE), (i / BRICKMAP_SIZE) % BRICKMAP_SIZE, i % BRICKMAP_SIZE);
-            //std::cout << "Voxel coords: x=" << mapCoords.x << ", y=" << mapCoords.y << ", z=" << mapCoords.z << "\n";
             unsigned int baseIndex = vertices.size() / 6;
-            //std::cout << "Base Index: " << baseIndex << "\n";
-
-            glm::vec3 color(static_cast<float>(mapCoords.x) / (BRICKMAP_SIZE - 1), static_cast<float>(mapCoords.y) / (BRICKMAP_SIZE - 1), static_cast<float>(mapCoords.z) / (BRICKMAP_SIZE - 1));
-            //std::cout << "Voxel color: r=" << color.r << ", g=" << color.g << ", b=" << color.b << "\n";
 
             // Calculate the voxel offset based on local coords and chunk offset
-            for (int j = 0; j < sizeof(baseVertices) / sizeof(float); ++j) {
-                // Determine if value is X, Y, Z, or color
-                float coordOffset = 0.0f;
-                switch (j % 6) {
-                case 0:
-                    // X
-                    coordOffset = location.Position.x + mapCoords.x;
-                    break;
-                case 1:
-                    // Y
-                    coordOffset = location.Position.y + mapCoords.y;
-                    break;
-                case 2:
-                    // Z
-                    coordOffset = location.Position.z + mapCoords.z;
-                    break;
-                case 3:
-                    // R
-                    coordOffset = color.r;
-                    break;
-                case 4:
-                    // G
-                    coordOffset = color.g;
-                    break;
-                case 5:
-                    // B
-                    coordOffset = color.b;
-                    break;
-                default:
-                    std::cout << "Switch statement broke; default option selected!\n";
-                }
+            for (int j = 0; j < sizeof(baseVertices) / sizeof(float); j += 3) {
+                // Relative coords
+                glm::vec4 position(
+                    baseVertices[j + 0] + mapCoords.x,
+                    baseVertices[j + 1] + mapCoords.y,
+                    baseVertices[j + 2] + mapCoords.z,
+                    1.0
+                );
+                // Translate so center of mass is at 0,0,0
+                glm::mat4 centerOfMass = glm::translate(glm::mat4(1.0), glm::vec3(-4.0f, -4.0f, -4.0f));
 
-                vertices.push_back(baseVertices[j] + coordOffset);
+                // Scale
+                glm::mat4 scale = glm::scale(glm::mat4(1.0), location.Scale);
+
+                // Rotate
+                glm::mat4 rotation = glm::rotate(location.Rotation.w, glm::vec3(location.Rotation.x, location.Rotation.y, location.Rotation.z));
+
+                // Translate
+                glm::mat4 translation = glm::translate(glm::mat4(1.0), location.Position);
+
+                // Apply transformations to vertex
+                glm::mat4 transformation = translation * rotation *scale* centerOfMass;
+                position = transformation * position;
+
+                vertices.push_back(position.x);
+                vertices.push_back(position.y);
+                vertices.push_back(position.z);
+                vertices.push_back(mapCoords.x / 8);
+                vertices.push_back(mapCoords.y / 8);
+                vertices.push_back(mapCoords.z / 8);
             }
 
             for (int j = 0; j < sizeof(baseIndices) / sizeof(unsigned int); ++j) {

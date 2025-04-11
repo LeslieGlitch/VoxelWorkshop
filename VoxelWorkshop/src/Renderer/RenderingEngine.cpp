@@ -84,7 +84,7 @@ namespace Render {
             glm::vec3(1.0, 1.0, 1.0), // Scale
             glm::vec4(1.0, 0.0, 0.0, 0.0)// Rotation
         };
-        hSphere.setPosition(location);
+        hSphere.setTransformation(location);
         double time = 0.0;
 
         /* Render Loop */
@@ -103,10 +103,10 @@ namespace Render {
 
             // Bob test object up and down
             time += 0.01;
-            hSphere.setPosition({
-            glm::vec3(-4.0, -4.0 + glm::sin(time), -4.0), // Position
-            glm::vec3(1.0, 1.0, 1.0), // Scale
-            glm::vec4(1.0, 0.0, 0.0, 0.0)// Rotation
+            hSphere.setTransformation({
+            glm::vec3(0.0,  glm::sin(time), 0.0), // Position
+            glm::vec3(1.0 + glm::sin(time) / 2, 1.0 + glm::sin(time) / 2, 1.0 + glm::sin(time) / 2), // Scale
+            glm::vec4(0.0, 1.0, 0.0, glm::sin(time))// Rotation
                 });
 
             hSphere.render();

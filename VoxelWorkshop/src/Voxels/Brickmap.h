@@ -19,7 +19,7 @@ const int BRICKMAP_SIZE = 8;
 struct LocationData {
     glm::vec3 Position = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 Scale = glm::vec3(1.0f, 1.0f, 1.0f);
-    glm::vec4 Rotation = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+    glm::vec4 Rotation = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
 };
 
 class Brickmap {

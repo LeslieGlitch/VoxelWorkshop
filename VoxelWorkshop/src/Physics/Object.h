@@ -31,7 +31,7 @@ public:
 
     /// @brief Updates the object position and regenerates the mesh
     /// @param position new position for the object
-    void setPosition(const LocationData& location);
+    void setTransformation(const LocationData& location);
 
     /// @brief Renders the game object
     void render();
