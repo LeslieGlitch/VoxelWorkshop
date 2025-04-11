@@ -51,6 +51,7 @@ void Brickmap::linkMesh() {
     return;
 }
 
+/// @TODO update mesh generation to use matrices instead of half-baked switch statement
 unsigned int Brickmap::generateMesh(const LocationData& location) {
     const float baseVertices[] =
     {//    Coordinates		/     Colors           /   L/R - U/D - F/B
