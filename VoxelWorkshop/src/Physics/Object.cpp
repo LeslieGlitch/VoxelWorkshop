@@ -11,7 +11,7 @@ unsigned int indexArraySize;
 
 Object::Object() {
     Object::structure.loadFromFile("region0.txt");
-    indexArraySize = Object::structure.generateMesh(Object::location.Position);
+    indexArraySize = Object::structure.generateMesh(Object::location);
     // Link mesh to the VAO
     Object::structure.linkMesh();
 }
@@ -20,9 +20,9 @@ Object::Object(Brickmap structure) {
     Object::structure = structure;
 }
 
-void Object::setPosition(glm::vec3 position) {
-    Object::location.Position = position;
-    indexArraySize = Object::structure.generateMesh(position);
+void Object::setPosition(const LocationData& location) {
+    Object::location = location;
+    indexArraySize = Object::structure.generateMesh(location);
     // Link mesh to the VAO
     Object::structure.linkMesh();
 }

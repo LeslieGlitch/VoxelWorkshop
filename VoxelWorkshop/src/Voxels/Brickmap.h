@@ -16,6 +16,12 @@
 // Size taken from brickmap paper
 const int BRICKMAP_SIZE = 8;
 
+struct LocationData {
+    glm::vec3 Position = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 Scale = glm::vec3(1.0f, 1.0f, 1.0f);
+    glm::vec4 Rotation = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+};
+
 class Brickmap {
 private:
     std::bitset<BRICKMAP_SIZE * BRICKMAP_SIZE * BRICKMAP_SIZE> solidMask;
@@ -27,7 +33,7 @@ public:
     Brickmap();
     ~Brickmap();
     VAO VAO;
-    unsigned int generateMesh(const glm::vec3 &offset);
+    unsigned int generateMesh(const LocationData &location);
     void linkMesh();
 
     bool loadFromFile(const std::string &fileName);

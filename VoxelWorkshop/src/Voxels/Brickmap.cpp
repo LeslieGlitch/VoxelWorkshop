@@ -51,7 +51,7 @@ void Brickmap::linkMesh() {
     return;
 }
 
-unsigned int Brickmap::generateMesh(const glm::vec3& offset) {
+unsigned int Brickmap::generateMesh(const LocationData& location) {
     const float baseVertices[] =
     {//    Coordinates		/     Colors           /   L/R - U/D - F/B
          0.0f,  0.0f,  0.0f,   0.00f, 0.00f, 0.00f, // L   - D   - B
@@ -103,15 +103,15 @@ unsigned int Brickmap::generateMesh(const glm::vec3& offset) {
                 switch (j % 6) {
                 case 0:
                     // X
-                    coordOffset = offset.x + mapCoords.x;
+                    coordOffset = location.Position.x + mapCoords.x;
                     break;
                 case 1:
                     // Y
-                    coordOffset = offset.y + mapCoords.y;
+                    coordOffset = location.Position.y + mapCoords.y;
                     break;
                 case 2:
                     // Z
-                    coordOffset = offset.z + mapCoords.z;
+                    coordOffset = location.Position.z + mapCoords.z;
                     break;
                 case 3:
                     // R
