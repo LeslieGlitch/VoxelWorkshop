@@ -123,9 +123,12 @@ unsigned int Brickmap::generateMesh(const LocationData& location, const Material
                 glm::mat4 transformation = translation * rotation *scale* centerOfMass;
                 position = transformation * position;
 
+                // Add vertex position to buffer
                 vertices.push_back(position.x);
                 vertices.push_back(position.y);
                 vertices.push_back(position.z);
+
+                // Add voxel color to buffer with slight offset based on relative coordinates
                 vertices.push_back(color.r + (float(i % 3) - 1) / 20);
                 vertices.push_back(color.g + (float(i % 3) - 1) / 20);
                 vertices.push_back(color.b + (float(i % 3) - 1) / 20);
