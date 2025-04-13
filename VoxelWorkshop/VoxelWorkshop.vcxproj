@@ -162,6 +162,7 @@
     <ClInclude Include="src\Renderer\RenderingEngine.hpp" />
     <ClInclude Include="src\Renderer\Shader.h" />
     <ClInclude Include="src\Voxels\Chunk.h" />
+    <ClInclude Include="src\Voxels\Material.h" />
     <ClInclude Include="src\Voxels\VisualData.h" />
     <ClInclude Include="src\Voxels\Voxel.h" />
     <ClInclude Include="src\Renderer\VBO.h" />

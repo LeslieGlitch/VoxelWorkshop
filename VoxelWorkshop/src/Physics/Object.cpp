@@ -11,7 +11,7 @@ unsigned int indexArraySize;
 
 Object::Object() {
     Object::structure.loadFromFile("region0.txt");
-    indexArraySize = Object::structure.generateMesh(Object::location);
+    indexArraySize = Object::structure.generateMesh(Object::location, Object::material);
     // Link mesh to the VAO
     Object::structure.linkMesh();
 }
@@ -22,7 +22,14 @@ Object::Object(Brickmap structure) {
 
 void Object::setTransformation(const LocationData& location) {
     Object::location = location;
-    indexArraySize = Object::structure.generateMesh(location);
+    indexArraySize = Object::structure.generateMesh(Object::location, Object::material);
+    // Link mesh to the VAO
+    Object::structure.linkMesh();
+}
+
+void Object::setMaterial(const Material& material) {
+    Object::material = material;
+    indexArraySize = Object::structure.generateMesh(Object::location, Object::material);
     // Link mesh to the VAO
     Object::structure.linkMesh();
 }

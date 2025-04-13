@@ -1,3 +1,5 @@
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include "Brickmap.h"
 #include "../Renderer/VAO.h"
 #include "../Renderer/VBO.h"
@@ -53,8 +55,7 @@ void Brickmap::linkMesh() {
     return;
 }
 
-/// @TODO update mesh generation to use matrices instead of half-baked switch statement
-unsigned int Brickmap::generateMesh(const LocationData& location) {
+unsigned int Brickmap::generateMesh(const LocationData& location, const Material& material) {
     const float baseVertices[] =
     {//    Coordinates     //   L/R - U/D - F/B
          0.0f,  0.0f,  0.0f, // L   - D   - B
@@ -84,7 +85,7 @@ unsigned int Brickmap::generateMesh(const LocationData& location) {
     };
 
     // Temporary static color, @TODO replace with material color
-    glm::vec3 color(0.0f, 1.0f, 0.0f);
+    glm::vec3 color = material.getColor();
 
     // Clear previous vertex/index list
     vertices = {};
@@ -125,9 +126,9 @@ unsigned int Brickmap::generateMesh(const LocationData& location) {
                 vertices.push_back(position.x);
                 vertices.push_back(position.y);
                 vertices.push_back(position.z);
-                vertices.push_back(mapCoords.x / 8);
-                vertices.push_back(mapCoords.y / 8);
-                vertices.push_back(mapCoords.z / 8);
+                vertices.push_back(color.r + (float(i % 3) - 1) / 20);
+                vertices.push_back(color.g + (float(i % 3) - 1) / 20);
+                vertices.push_back(color.b + (float(i % 3) - 1) / 20);
             }
 
             for (int j = 0; j < sizeof(baseIndices) / sizeof(unsigned int); ++j) {

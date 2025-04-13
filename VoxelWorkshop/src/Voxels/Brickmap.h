@@ -11,6 +11,7 @@
 #include <bitset>
 #include <glm/glm.hpp>
 #include "VisualData.h"
+#include "../Voxels/Material.h"
 #include "../Renderer/VAO.h"
 
 // Size taken from brickmap paper
@@ -33,7 +34,7 @@ public:
     Brickmap();
     ~Brickmap();
     VAO VAO;
-    unsigned int generateMesh(const LocationData &location);
+    unsigned int generateMesh(const LocationData &location, const Material& material);
     void linkMesh();
 
     bool loadFromFile(const std::string &fileName);

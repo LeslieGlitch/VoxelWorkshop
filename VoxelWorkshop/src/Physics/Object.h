@@ -4,8 +4,12 @@
  * Include file for base physics object
  */
 
+#ifndef OBJECT_H
+#define OBJECT_H
+
 #include <glm/glm.hpp>
 #include "../Voxels/Brickmap.h"
+#include "../Voxels/Material.h"
 
 struct PhysicsData {
     glm::vec3 linearVelocity = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -20,6 +24,9 @@ public:
     LocationData location;
     PhysicsData movement;
 
+    // Object Material
+    Material material = Material("stone", glm::vec3(0.82, 0.82, 0.82));
+
     // The brickmap model
     Brickmap structure;
 
@@ -33,6 +40,8 @@ public:
     /// @param position new position for the object
     void setTransformation(const LocationData& location);
 
+    void setMaterial(const Material& material);
+
     /// @brief Renders the game object
     void render();
 
@@ -42,3 +51,5 @@ public:
     /// @brief Function called once every game tick
     void update();
 };
+
+#endif
