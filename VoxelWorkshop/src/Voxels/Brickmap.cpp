@@ -31,6 +31,34 @@ Brickmap::~Brickmap() {
     VAO.Delete();
 }
 
+static glm::vec3 indexToCoords(const int& index, const int& sideLength) {
+    // Guard clause, index out of range
+    if (index < 0 || index > sideLength * sideLength * sideLength) {
+        return glm::vec3(-1.0, -1.0, -1.0);
+    }
+
+    return glm::vec3(
+        index / (sideLength * sideLength),
+        (index / sideLength) % sideLength,
+        index % sideLength
+    );
+}
+
+static int coordsToIndex(const glm::vec3& coords, const int& sideLength) {
+    // Guard clauses, coords out of range
+    if (coords.x < 0 || coords.x > sideLength) {
+        return -1;
+    }
+    if (coords.y < 0 || coords.y > sideLength) {
+        return -1;
+    }
+    if (coords.z < 0 || coords.z > sideLength) {
+        return -1;
+    }
+
+    return (coords.x * sideLength * sideLength) + (coords.y * sideLength) + (coords.z);
+}
+
 void Brickmap::linkMesh() {
     VAO.Bind();
 
@@ -80,8 +108,8 @@ unsigned int Brickmap::generateMesh(const LocationData& location, const Material
         5, 6, 7, // Front 2
         1, 5, 3, // Right 1
         3, 5, 7, // Right 2
-        2, 3, 7, // Front 1
-        2, 7, 6  // Front 2
+        2, 3, 7, // Up 1
+        2, 7, 6  // Up 2
     };
 
     // Get material color
@@ -95,7 +123,7 @@ unsigned int Brickmap::generateMesh(const LocationData& location, const Material
         // Only create cubes for filled voxels
         if (Brickmap::solidMask[i]) {
             // Get the local coordinates within the brickmap
-            glm::vec3 mapCoords(i / (BRICKMAP_SIZE * BRICKMAP_SIZE), (i / BRICKMAP_SIZE) % BRICKMAP_SIZE, i % BRICKMAP_SIZE);
+            glm::vec3 mapCoords = indexToCoords(i, BRICKMAP_SIZE);
             unsigned int baseIndex = vertices.size() / 6;
 
             // Calculate the voxel offset based on local coords and chunk offset
@@ -107,7 +135,7 @@ unsigned int Brickmap::generateMesh(const LocationData& location, const Material
                     baseVertices[j + 2] + mapCoords.z,
                     1.0
                 );
-                // Translate so center of mass is at 0,0,0
+                // Translate so center of object is at 0,0,0
                 glm::mat4 centerOfMass = glm::translate(glm::mat4(1.0), glm::vec3(-4.0f, -4.0f, -4.0f));
 
                 // Scale
@@ -120,7 +148,7 @@ unsigned int Brickmap::generateMesh(const LocationData& location, const Material
                 glm::mat4 translation = glm::translate(glm::mat4(1.0), location.Position);
 
                 // Apply transformations to vertex
-                glm::mat4 transformation = translation * rotation *scale* centerOfMass;
+                glm::mat4 transformation = translation * rotation * scale * centerOfMass;
                 position = transformation * position;
 
                 // Add vertex position to buffer
@@ -134,6 +162,7 @@ unsigned int Brickmap::generateMesh(const LocationData& location, const Material
                 vertices.push_back(color.b + (float(i % 3) - 1) / 50);
             }
 
+            /// @TODO Cull faces that face into another voxel
             for (int j = 0; j < sizeof(baseIndices) / sizeof(unsigned int); ++j) {
                 indices.push_back(baseIndices[j] + baseIndex);
             }

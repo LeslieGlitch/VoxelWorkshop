@@ -109,7 +109,7 @@ namespace Render {
             // Collect inputs from user
             camera.Inputs(window);
             // Transform coordinates based on camera position
-            camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
+            camera.Matrix(45.0f, 0.1f, 1000.0f, shaderProgram, "camMatrix");
 
             // Bob test object up and down
             time += 0.01;
