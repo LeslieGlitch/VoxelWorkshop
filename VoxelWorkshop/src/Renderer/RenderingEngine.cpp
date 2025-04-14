@@ -23,7 +23,7 @@
 #include "../Physics/Object.h"
 
 Material stone("stone", glm::vec3(0.82, 0.82, 0.82));
-Material wood("wood", glm::vec3(0.87, 0.72, 0.53));
+Material wood("wood", glm::vec3(0.77, 0.62, 0.43));
 Material foliage("foliage", glm::vec3(0.13, 0.55, 0.13));
 Material iron("iron", glm::vec3(0.6, 0.6, 0.6));
 Material gold("gold", glm::vec3(1.0, 0.84, 0.0));
@@ -87,14 +87,14 @@ namespace Render {
         Camera camera(screenSize[0], screenSize[1], glm::vec3(6.0f, 6.0f, 6.0f));
 
         // Test object for movement
-        Object hSphere;
+        Object hSphere("hSphere.bm");
         LocationData location{
             glm::vec3(-4.0, -4.0, -4.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale
             glm::vec4(1.0, 0.0, 0.0, 0.0)// Rotation
         };
         hSphere.setTransformation(location);
-        hSphere.setMaterial(clay);
+        hSphere.setMaterial(foliage);
         double time = 0.0;
 
         /* Render Loop */

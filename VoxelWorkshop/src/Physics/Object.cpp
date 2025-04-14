@@ -10,7 +10,14 @@
 unsigned int indexArraySize;
 
 Object::Object() {
-    Object::structure.loadFromFile("region0.txt");
+    Object::structure.loadFromFile("hSphere.bm");
+    indexArraySize = Object::structure.generateMesh(Object::location, Object::material);
+    // Link mesh to the VAO
+    Object::structure.linkMesh();
+}
+
+Object::Object(std::string filename) {
+    Object::structure.loadFromFile(filename);
     indexArraySize = Object::structure.generateMesh(Object::location, Object::material);
     // Link mesh to the VAO
     Object::structure.linkMesh();

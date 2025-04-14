@@ -33,6 +33,9 @@ public:
     /// @brief Default Constructor
     Object();
 
+    /// @brief Constructor with brickmap filename
+    Object(std::string filename);
+
     /// @brief Contructor with Brickmap
     Object(Brickmap structure);
 

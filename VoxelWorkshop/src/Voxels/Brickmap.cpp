@@ -70,21 +70,21 @@ unsigned int Brickmap::generateMesh(const LocationData& location, const Material
 
     const unsigned int baseIndices[] =
     {
-        0, 3, 2,
-        0, 1, 3,
-        0, 2, 6,
-        0, 6, 4,
-        0, 4, 1,
-        1, 4, 5,
-        4, 6, 5,
-        5, 6, 7,
-        1, 5, 3,
-        3, 5, 7,
-        2, 3, 7,
-        2, 7, 6
+        0, 3, 2, // Back 1
+        0, 1, 3, // Back 2
+        0, 2, 6, // Left 1
+        0, 6, 4, // Left 2
+        0, 4, 1, // Down 1
+        1, 4, 5, // Down 2
+        4, 6, 5, // Front 1
+        5, 6, 7, // Front 2
+        1, 5, 3, // Right 1
+        3, 5, 7, // Right 2
+        2, 3, 7, // Front 1
+        2, 7, 6  // Front 2
     };
 
-    // Temporary static color, @TODO replace with material color
+    // Get material color
     glm::vec3 color = material.getColor();
 
     // Clear previous vertex/index list
@@ -129,9 +129,9 @@ unsigned int Brickmap::generateMesh(const LocationData& location, const Material
                 vertices.push_back(position.z);
 
                 // Add voxel color to buffer with slight offset based on relative coordinates
-                vertices.push_back(color.r + (float(i % 3) - 1) / 20);
-                vertices.push_back(color.g + (float(i % 3) - 1) / 20);
-                vertices.push_back(color.b + (float(i % 3) - 1) / 20);
+                vertices.push_back(color.r + (float(i % 3) - 1) / 50);
+                vertices.push_back(color.g + (float(i % 3) - 1) / 50);
+                vertices.push_back(color.b + (float(i % 3) - 1) / 50);
             }
 
             for (int j = 0; j < sizeof(baseIndices) / sizeof(unsigned int); ++j) {
