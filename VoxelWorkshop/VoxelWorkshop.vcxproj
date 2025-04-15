@@ -145,6 +145,7 @@
     <ClCompile Include="src\Voxels\Chunk.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Voxels\Material.cpp" />
     <ClCompile Include="src\Voxels\Voxel.cpp" />
     <ClCompile Include="src\Renderer\VBO.cpp" />
     <ClCompile Include="src\Renderer\VAO.cpp" />

@@ -20,7 +20,7 @@ std::vector<float> vertices = {};
 std::vector <unsigned int> indices = {};
 
 // Path to region files
-std::string pathToRegions = "src/World/Region/";
+std::string pathToRegions = "src/World/Brickmap/";
 
 Brickmap::Brickmap() {
     return;

@@ -24,15 +24,6 @@
 #include "../Physics/RigidBody.h"
 #include "../Physics/StaticBody.h"
 
-Material stone("stone", glm::vec3(0.82, 0.82, 0.82));
-Material wood("wood", glm::vec3(0.77, 0.62, 0.43));
-Material foliage("foliage", glm::vec3(0.13, 0.55, 0.13));
-Material iron("iron", glm::vec3(0.6, 0.6, 0.6));
-Material gold("gold", glm::vec3(1.0, 0.84, 0.0));
-Material cloth("cloth", glm::vec3(0.94, 0.90, 0.55));
-Material dirt("dirt", glm::vec3(0.55, 0.27, 0.08));
-Material clay("clay", glm::vec3(0.68, 0.85, 0.90));
-
 const unsigned int screenSize[] = { 1280, 720 };
 
 namespace Render {

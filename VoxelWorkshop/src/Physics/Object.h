@@ -25,13 +25,13 @@ public:
     PhysicsData movement;
 
     // Object Material
-    Material material = Material("stone", glm::vec3(0.82, 0.82, 0.82));
+    Material material = Material(stone);
 
     // The brickmap model
     Brickmap structure;
 
     // Index array size for rendering
-    unsigned int indexArraySize;
+    unsigned int indexArraySize = 0;
 
     /// @brief Default Constructor
     Object();

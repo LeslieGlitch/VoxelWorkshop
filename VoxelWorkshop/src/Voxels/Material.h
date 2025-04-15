@@ -10,15 +10,27 @@
 #include <string>
 #include <glm/glm.hpp>
 
+enum MatList {
+    stone,
+    wood,
+    foliage,
+    iron,
+    gold,
+    cloth,
+    dirt,
+    clay
+};
+
 class Material {
 private:
-    std::string ID = "";
-    glm::vec3 color = glm::vec3(1.0, 1.0, 1.0);
+    MatList ID = stone;
+    glm::vec3 color = glm::vec3(0.82, 0.82, 0.82);
 
 public:
-    Material(std::string ID, glm::vec3 color) { Material::ID = ID; Material::color = color; }
-    Material(const Material& material) { Material::ID = material.ID; Material::color = material.color; }
-    glm::vec3 getColor() const { return color; }
+    Material(MatList ID);
+    Material(const Material& material);
+    glm::vec3 getColor() const;
+    void setMaterial(MatList ID);
 };
 
 #endif
