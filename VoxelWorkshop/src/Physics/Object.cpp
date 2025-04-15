@@ -7,8 +7,6 @@
 #include "Object.h"
 #include <glm/glm.hpp>
 
-unsigned int indexArraySize;
-
 Object::Object() {
     Object::structure.loadFromFile("hSphere.bm");
     indexArraySize = Object::structure.generateMesh(Object::location, Object::material);
@@ -52,11 +50,5 @@ void Object::start() {
 }
 
 void Object::update() {
-    // Update location data
-    Object::location.Position += Object::movement.linearVelocity;
-    Object::movement.linearVelocity += Object::movement.linearAcceleration;
-
-    // Update rotation data
-    Object::location.Rotation += Object::movement.rotationalVelocity;
-    Object::movement.rotationalVelocity += Object::movement.rotationalAcceleration;
+    return;
 }

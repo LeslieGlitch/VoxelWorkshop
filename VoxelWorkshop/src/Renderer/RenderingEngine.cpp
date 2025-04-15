@@ -21,6 +21,8 @@
 
 #include "../Voxels/Brickgrid.h"
 #include "../Physics/Object.h"
+#include "../Physics/RigidBody.h"
+#include "../Physics/StaticBody.h"
 
 Material stone("stone", glm::vec3(0.82, 0.82, 0.82));
 Material wood("wood", glm::vec3(0.77, 0.62, 0.43));
@@ -87,7 +89,7 @@ namespace Render {
         Camera camera(screenSize[0], screenSize[1], glm::vec3(6.0f, 6.0f, 6.0f));
 
         // Test object for movement
-        Object hSphere("hSphere.bm");
+        RigidBody hSphere("hSphere.bm");
         LocationData location{
             glm::vec3(-4.0, -4.0, -4.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale

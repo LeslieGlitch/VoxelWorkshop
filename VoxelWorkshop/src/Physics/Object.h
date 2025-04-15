@@ -30,6 +30,9 @@ public:
     // The brickmap model
     Brickmap structure;
 
+    // Index array size for rendering
+    unsigned int indexArraySize;
+
     /// @brief Default Constructor
     Object();
 
