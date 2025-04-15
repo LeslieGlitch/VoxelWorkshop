@@ -204,6 +204,9 @@ bool Brickmap::loadFromFile(const std::string& fileName) {
         }
     }
 
+    // Update filename
+    Brickmap::filename = fileName;
+
     // Cleanup
     file.close();
     return false;

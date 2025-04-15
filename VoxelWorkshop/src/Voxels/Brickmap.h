@@ -34,6 +34,7 @@ public:
     Brickmap();
     ~Brickmap();
     VAO VAO;
+    std::string filename = "hSphere.bm";
     unsigned int generateMesh(const LocationData &location, const Material& material);
     void linkMesh();
 

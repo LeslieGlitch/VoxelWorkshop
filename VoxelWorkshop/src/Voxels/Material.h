@@ -31,6 +31,7 @@ public:
     Material(const Material& material);
     glm::vec3 getColor() const;
     void setMaterial(MatList ID);
+    MatList getMaterial();
 };
 
 #endif

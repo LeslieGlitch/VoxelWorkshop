@@ -80,14 +80,19 @@ namespace Render {
         Camera camera(screenSize[0], screenSize[1], glm::vec3(6.0f, 6.0f, 6.0f));
 
         // Test object for movement
-        RigidBody hSphere("hSphere.bm");
+        /*
+        RigidBody hSphere("Disk.bm");
         LocationData location{
-            glm::vec3(-4.0, -4.0, -4.0), // Position
+            glm::vec3(0.0, 0.0, 0.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale
             glm::vec4(1.0, 0.0, 0.0, 0.0)// Rotation
         };
         hSphere.setTransformation(location);
-        hSphere.setMaterial(foliage);
+        hSphere.setMaterial(gold);
+        hSphere.saveToFile("Disk_gold.bmo");
+        */
+        RigidBody hSphere;
+        hSphere.loadFromFile("Disk_gold.bmo");
         double time = 0.0;
 
         /* Render Loop */
@@ -105,12 +110,14 @@ namespace Render {
             camera.Matrix(45.0f, 0.1f, 1000.0f, shaderProgram, "camMatrix");
 
             // Bob test object up and down
+            /*
             time += 0.01;
             hSphere.setTransformation({
             glm::vec3(0.0,  glm::sin(time), 0.0), // Position
             glm::vec3(1.0 + glm::sin(time) / 2, 1.0 + glm::sin(time) / 2, 1.0 + glm::sin(time) / 2), // Scale
             glm::vec4(0.0, 1.0, 0.0, glm::sin(time))// Rotation
                 });
+            */
 
             hSphere.render();
             // Swap the back buffer with the front buffer

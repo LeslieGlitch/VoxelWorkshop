@@ -35,3 +35,7 @@ void Material::setMaterial(MatList ID) {
     Material::ID = ID;
     Material::color = MatColors[ID];
 }
+
+MatList Material::getMaterial() {
+    return Material::ID;
+}
