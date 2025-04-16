@@ -20,9 +20,7 @@
 #include "Camera.h"
 
 #include "../Voxels/Brickgrid.h"
-#include "../Physics/Object.h"
-#include "../Physics/RigidBody.h"
-#include "../Physics/StaticBody.h"
+#include "../Physics/PhysicsEngine.hpp"
 
 const unsigned int screenSize[] = { 1280, 720 };
 
@@ -127,7 +125,7 @@ namespace Render {
         }
 
         /* Cleanup */
-        
+        Physics::quitPhysics();
         shaderProgram.Delete();
         // Delete window before ending the program
         glfwDestroyWindow(window);
