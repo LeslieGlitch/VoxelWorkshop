@@ -54,6 +54,10 @@ void Object::render() {
     glDrawElements(GL_TRIANGLES, indexArraySize, GL_UNSIGNED_INT, 0);
 }
 
+void Object::Impulse(float impulse, glm::vec3 direction, glm::vec3 offsetFromCenterOfMass) {
+    return;
+}
+
 static float fileToFloat(std::ifstream& file) {
     // Read float as raw bits
     float valToReturn[1];

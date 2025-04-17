@@ -20,6 +20,8 @@ public:
     /// @brief Contructor with Brickmap
     RigidBody(Brickmap structure);
 
+    void Impulse(float impulse, glm::vec3 direction, glm::vec3 offsetFromCenterOfMass);
+
     /// @brief Function called when object spawns
     void start();
 

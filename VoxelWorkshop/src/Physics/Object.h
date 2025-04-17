@@ -55,6 +55,8 @@ public:
     /// @brief Renders the game object
     void render();
 
+    void Impulse(float impulse, glm::vec3 direction, glm::vec3 offsetFromCenterOfMass);
+
     /// @brief Loads an object from disk
     /// @param fileName name of the file to be loaded
     /// @return status, false is success and true is failure

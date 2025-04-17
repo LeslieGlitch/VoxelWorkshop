@@ -4,7 +4,11 @@
  * Implementation file for Rigid Body class
  */
 
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include "RigidBody.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
 
 RigidBody::RigidBody() {
     RigidBody::structure.loadFromFile("hSphere.bm");
@@ -35,10 +39,37 @@ void RigidBody::update() {
     Object::update();
 
     // Update location data
-    RigidBody::location.Position += RigidBody::movement.linearVelocity;
-    RigidBody::movement.linearVelocity += RigidBody::movement.linearAcceleration;
+    LocationData newLocation = RigidBody::location;
+    PhysicsData newPhysics = RigidBody::movement;
+    newLocation.Position += RigidBody::movement.linearVelocity;
+    newPhysics.linearVelocity += RigidBody::movement.linearAcceleration;
+    newPhysics.linearAcceleration = glm::normalize(-RigidBody::location.Position) * 0.01f;
 
     // Update rotation data
-    RigidBody::location.Rotation += RigidBody::movement.rotationalVelocity;
-    RigidBody::movement.rotationalVelocity += RigidBody::movement.rotationalAcceleration;
+    newLocation.Rotation += RigidBody::movement.rotationalVelocity;
+    newPhysics.rotationalVelocity += RigidBody::movement.rotationalAcceleration;
+    newPhysics.rotationalAcceleration = glm::vec4(1.0, 1.0, 1.0, 0.0);
+
+    setPhysics(newPhysics);
+    setTransformation(newLocation);
+
+    return;
+}
+
+void RigidBody::Impulse(float impulse, glm::vec3 direction, glm::vec3 offsetFromCenterOfMass) {
+    // Create data to emplace
+    //LocationData newLocation = RigidBody::location;
+    PhysicsData newPhysics = RigidBody::movement;
+
+    // Update linear acceleration
+    newPhysics.linearAcceleration += glm::normalize(direction) * impulse;
+
+    // Update rotation acceleration
+    if (offsetFromCenterOfMass.length() > 0.1) {
+        glm::vec3 rotAxis = glm::normalize(glm::cross(offsetFromCenterOfMass, direction));
+        newPhysics.rotationalAcceleration += glm::vec4(rotAxis, impulse/250);
+    }
+
+    setPhysics(newPhysics);
+    //setTransformation(newLocation);
 }
