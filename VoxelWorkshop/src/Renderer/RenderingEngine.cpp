@@ -78,7 +78,7 @@ namespace Render {
         Camera camera(screenSize[0], screenSize[1], glm::vec3(2.0f, 2.0f, 2.0f));
 
         // Test object for movement
-        RigidBody hSphere("Disk.bm");
+        RigidBody Disk("Disk.bm");
         LocationData location{
             glm::vec3(10.0, 0.0, 0.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale
@@ -90,9 +90,26 @@ namespace Render {
             glm::vec4(1.0, 1.0, 1.0, 0.0), // Rotational Velocity
             glm::vec4(1.0, 1.0, 1.0, 0.0), // Rotational Acceleration
         };
-        hSphere.setTransformation(location);
-        hSphere.setPhysics(movement);
-        hSphere.setMaterial(stone);
+        Disk.setTransformation(location);
+        Disk.setPhysics(movement);
+        Disk.setMaterial(wood);
+
+        RigidBody Ball("Sphere.bm");
+        location = {
+            glm::vec3(-10.0, 0.0, 0.0), // Position
+            glm::vec3(1.0, 1.0, 1.0), // Scale
+            glm::vec4(1.0, 1.0, 1.0, 0.0)// Rotation
+        };
+        movement = {
+            glm::vec3(0.0, 0.0, 9.0), // Linear Velocity
+            glm::vec3(0.0, 0.0, 0.01), // Linear Acceleration
+            glm::vec4(1.0, 1.0, 1.0, 0.0), // Rotational Velocity
+            glm::vec4(1.0, 1.0, 1.0, 0.0), // Rotational Acceleration
+        };
+        Ball.setTransformation(location);
+        Ball.setPhysics(movement);
+        Ball.setMaterial(stone);
+
         bool firstClick = true;
 
         /* Render Loop */
@@ -109,13 +126,13 @@ namespace Render {
             // Transform coordinates based on camera position
             camera.Matrix(45.0f, 0.1f, 1000.0f, shaderProgram, "camMatrix");
 
-            //movement.linearAcceleration = glm::normalize(-hSphere.location.Position) * 5.0f;
-            //hSphere.setPhysics(movement);
-            hSphere.update();
+            Disk.update();
+            Ball.update();
 
             if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
                 if (firstClick) {
-                    hSphere.Impulse(200.0f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(2.0, 0.0, 0.0));
+                    Disk.Impulse(200.0f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(2.0, 0.0, 0.0));
+                    Ball.Impulse(200.0f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(2.0, 0.0, 0.0));
                     firstClick = false;
                 }
                 
@@ -124,7 +141,8 @@ namespace Render {
                 firstClick = true;
             }
 
-            hSphere.render();
+            Disk.render();
+            Ball.render();
             // Swap the back buffer with the front buffer
             glfwSwapBuffers(window);
             // Take care of all GLFW events
