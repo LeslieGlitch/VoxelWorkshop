@@ -24,7 +24,6 @@ enum MatList {
 class Material {
 private:
     MatList ID = stone;
-    glm::vec3 color = glm::vec3(0.82, 0.82, 0.82);
 
 public:
     Material(MatList ID);
@@ -32,6 +31,10 @@ public:
     glm::vec3 getColor() const;
     void setMaterial(MatList ID);
     MatList getMaterial();
+
+    /// @brief Get the density of the material
+    /// @return Density in kg/(m^3)
+    float getDensity() const;
 };
 
 #endif

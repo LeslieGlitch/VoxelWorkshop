@@ -138,6 +138,9 @@ unsigned int Brickmap::generateMesh(const LocationData& location, const Material
                 // Translate so center of object is at 0,0,0
                 glm::mat4 centerOfMass = glm::translate(glm::mat4(1.0), glm::vec3(-4.0f, -4.0f, -4.0f));
 
+                // Scale so full object is 1m^3
+                glm::mat4 downScale = glm::scale(glm::mat4(1.0), glm::vec3(0.125, 0.125, 0.125));
+
                 // Scale
                 glm::mat4 scale = glm::scale(glm::mat4(1.0), location.Scale);
 
@@ -148,7 +151,7 @@ unsigned int Brickmap::generateMesh(const LocationData& location, const Material
                 glm::mat4 translation = glm::translate(glm::mat4(1.0), location.Position);
 
                 // Apply transformations to vertex
-                glm::mat4 transformation = translation * rotation * scale * centerOfMass;
+                glm::mat4 transformation = translation * rotation * scale * downScale * centerOfMass;
                 position = transformation * position;
 
                 // Add vertex position to buffer
@@ -170,6 +173,10 @@ unsigned int Brickmap::generateMesh(const LocationData& location, const Material
     }
     
     return indices.size();
+}
+
+int Brickmap::voxelCount() const {
+    return solidMask.count();
 }
 
 bool Brickmap::loadFromFile(const std::string& fileName) {

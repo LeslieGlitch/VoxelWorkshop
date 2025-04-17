@@ -37,6 +37,7 @@ public:
     std::string filename = "hSphere.bm";
     unsigned int generateMesh(const LocationData &location, const Material& material);
     void linkMesh();
+    int voxelCount() const;
 
     bool loadFromFile(const std::string &fileName);
     bool saveToFile(const std::string &fileName);

@@ -75,24 +75,25 @@ namespace Render {
         // Enable depth buffer
         glEnable(GL_DEPTH_TEST);
 
-        Camera camera(screenSize[0], screenSize[1], glm::vec3(6.0f, 6.0f, 6.0f));
+        Camera camera(screenSize[0], screenSize[1], glm::vec3(2.0f, 2.0f, 2.0f));
 
         // Test object for movement
         RigidBody hSphere("Disk.bm");
         LocationData location{
-            glm::vec3(5.0, 0.0, 0.0), // Position
+            glm::vec3(10.0, 0.0, 0.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale
             glm::vec4(1.0, 1.0, 1.0, 0.0)// Rotation
         };
         PhysicsData movement{
-            glm::vec3(0.0, 0.0, -0.25), // Linear Velocity
+            glm::vec3(0.0, 0.0, -9.0), // Linear Velocity
             glm::vec3(0.0, 0.0, 0.01), // Linear Acceleration
             glm::vec4(1.0, 1.0, 1.0, 0.0), // Rotational Velocity
             glm::vec4(1.0, 1.0, 1.0, 0.0), // Rotational Acceleration
         };
         hSphere.setTransformation(location);
         hSphere.setPhysics(movement);
-        hSphere.setMaterial(gold);
+        hSphere.setMaterial(stone);
+        bool firstClick = true;
 
         /* Render Loop */
         while (!glfwWindowShouldClose(window))
@@ -113,7 +114,14 @@ namespace Render {
             hSphere.update();
 
             if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
-                hSphere.Impulse(0.05f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(2.0, 0.0, 0.0));
+                if (firstClick) {
+                    hSphere.Impulse(200.0f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(2.0, 0.0, 0.0));
+                    firstClick = false;
+                }
+                
+            }
+            else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
+                firstClick = true;
             }
 
             hSphere.render();

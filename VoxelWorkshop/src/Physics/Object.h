@@ -11,6 +11,8 @@
 #include "../Voxels/Brickmap.h"
 #include "../Voxels/Material.h"
 
+const float VOXEL_SIZE = 1.0f / (8 * 8 * 8);
+
 struct PhysicsData {
     glm::vec3 linearVelocity = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 linearAcceleration = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -19,6 +21,8 @@ struct PhysicsData {
 };
 
 class Object {
+protected:
+    const float delta = 1.0f / 60.0f;
 public:
     // Where the object is and is going
     LocationData location;
@@ -55,7 +59,15 @@ public:
     /// @brief Renders the game object
     void render();
 
-    void Impulse(float impulse, glm::vec3 direction, glm::vec3 offsetFromCenterOfMass);
+    /// @brief Get the mass of the object
+    /// @return Mass of the object
+    float mass() const;
+
+    /// @brief Apply a force impulse to the object
+    /// @param impulse Total impulse in N*s
+    /// @param direction The direction of the force applied
+    /// @param offsetFromCenterOfMass Where the force is applied relative to the center of mass
+    void Impulse(float impulse, glm::vec3 direction, glm::vec3 offsetFromCenterOfMass = glm::vec3(0.0, 0.0, 0.0));
 
     /// @brief Loads an object from disk
     /// @param fileName name of the file to be loaded

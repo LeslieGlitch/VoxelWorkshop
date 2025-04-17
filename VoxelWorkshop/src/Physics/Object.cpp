@@ -54,6 +54,10 @@ void Object::render() {
     glDrawElements(GL_TRIANGLES, indexArraySize, GL_UNSIGNED_INT, 0);
 }
 
+float Object::mass() const {
+    return Object::structure.voxelCount() * Object::material.getDensity() * VOXEL_SIZE;
+}
+
 void Object::Impulse(float impulse, glm::vec3 direction, glm::vec3 offsetFromCenterOfMass) {
     return;
 }

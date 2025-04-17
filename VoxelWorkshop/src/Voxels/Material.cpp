@@ -17,25 +17,38 @@ glm::vec3 MatColors[] = {
     glm::vec3(0.68, 0.85, 0.90)  // clay
 };
 
+// density of each material (in g/m^3)
+float MatDensities[] = {
+    2.25, // stone
+    1.00, // wood
+    1.00, // foliage
+    1.00, // iron
+    1.00, // gold
+    1.00, // cloth
+    1.00, // dirt
+    1.00  // clay
+};
+
 Material::Material(MatList ID) {
     Material::ID = ID;
-    Material::color = MatColors[ID];
 }
 
 Material::Material(const Material& material) {
     Material::ID = material.ID;
-    Material::color = material.color;
 }
 
 glm::vec3 Material::getColor() const {
-    return color;
+    return MatColors[ID];
 }
 
 void Material::setMaterial(MatList ID) {
     Material::ID = ID;
-    Material::color = MatColors[ID];
 }
 
 MatList Material::getMaterial() {
     return Material::ID;
+}
+
+float Material::getDensity() const {
+    return MatDensities[ID] * 1000;
 }
