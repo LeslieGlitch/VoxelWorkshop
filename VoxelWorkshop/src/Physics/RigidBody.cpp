@@ -63,10 +63,7 @@ void RigidBody::Impulse(float impulse, glm::vec3 direction, glm::vec3 offsetFrom
     PhysicsData newPhysics = RigidBody::movement;
 
     // Update linear acceleration
-    std::cout << "linAcc before: " << glm::length(newPhysics.linearAcceleration) << "\n";
     newPhysics.linearAcceleration += glm::normalize(direction) * (impulse / (RigidBody::mass() * delta));
-    std::cout << "Mass:          " << RigidBody::mass() << "\n";
-    std::cout << "linAcc after:  " << glm::length(newPhysics.linearAcceleration) << "\n\n";
 
     // Update rotation acceleration
     if (glm::length(offsetFromCenterOfMass) > 0.1) {

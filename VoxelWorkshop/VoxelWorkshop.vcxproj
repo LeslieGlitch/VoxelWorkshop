@@ -132,6 +132,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Linking\include\imgui\imgui.cpp" />
+    <ClCompile Include="..\Linking\include\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\Linking\include\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\Linking\include\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\Linking\include\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\Linking\include\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\Linking\include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\Physics\Object.cpp" />
     <ClCompile Include="src\Physics\PhysicsEngine.cpp" />
     <ClCompile Include="src\Physics\RigidBody.cpp" />
@@ -156,6 +163,16 @@
     <None Include="src\Shaders\default.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Linking\include\imgui\imconfig.h" />
+    <ClInclude Include="..\Linking\include\imgui\imgui.h" />
+    <ClInclude Include="..\Linking\include\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="..\Linking\include\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\Linking\include\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="..\Linking\include\imgui\imgui_internal.h" />
+    <ClInclude Include="..\Linking\include\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\Linking\include\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\Linking\include\imgui\imstb_truetype.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="src\Physics\Object.h" />
     <ClInclude Include="src\Physics\PhysicsEngine.hpp" />
     <ClInclude Include="src\Physics\RigidBody.h" />
@@ -172,6 +189,9 @@
     <ClInclude Include="src\Voxels\Voxel.h" />
     <ClInclude Include="src\Renderer\VBO.h" />
     <ClInclude Include="src\Renderer\VAO.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="VoxelWorkshop.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
