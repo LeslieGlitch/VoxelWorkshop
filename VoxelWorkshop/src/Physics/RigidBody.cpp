@@ -67,7 +67,6 @@ void RigidBody::Impulse(float impulse, glm::vec3 direction, glm::vec3 offsetFrom
 
     // Update rotation acceleration
     if (glm::length(offsetFromCenterOfMass) > 0.1) {
-        std::cout << "rotation is happening\n\n";
         glm::vec3 rotAxis = glm::normalize(glm::cross(offsetFromCenterOfMass, direction));
         float projCoef = glm::dot(glm::normalize(direction), glm::vec3(glm::rotate((3.1416f / 2), rotAxis) * glm::normalize(glm::vec4(offsetFromCenterOfMass, 1.0))));
         newPhysics.rotationalAcceleration += glm::vec4(rotAxis, (impulse * projCoef) / (RigidBody::mass() * delta * glm::length(offsetFromCenterOfMass)));

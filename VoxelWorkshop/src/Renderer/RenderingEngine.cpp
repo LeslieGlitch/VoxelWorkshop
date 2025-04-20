@@ -29,6 +29,10 @@
 const unsigned int screenSize[] = { 1280, 720 };
 
 namespace Render {
+    void ShowMenuBar();
+    void ShowSceneGui();
+    void ShowObjectGui();
+
     // local variables
     const GLdouble pi = 3.1415926535897932384626433832795;
 
@@ -139,8 +143,11 @@ namespace Render {
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
-            ImGui::ShowDemoWindow(); // Show demo window! :)
-            ShowGui();
+
+            // GUI windows
+            ShowMenuBar(); // Save/Load scene and play/pause/stop simulation
+            ShowSceneGui(); // Objects in active scene
+            ShowObjectGui(); // Object properties
 
             // Specify the color of the background
             glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
@@ -191,7 +198,60 @@ namespace Render {
         return 0;
     }
 
-    void ShowGui() {
+    void ShowMenuBar() {
+        // Menu Bar
+        if (ImGui::BeginMainMenuBar()) {
+            if (ImGui::BeginMenu("File")) {
+                ImGui::MenuItem("(demo menu)", NULL, false, true);
+                if (ImGui::MenuItem("Save")) {}
+                if (ImGui::MenuItem("Load")) {}
+                ImGui::EndMenu();
+            }
+            if (ImGui::BeginMenu("Demos")) {
+                if (ImGui::MenuItem("Orbits", NULL, false, true)) {}
+                ImGui::EndMenu();
+            }
+            ImGui::EndMainMenuBar();
+        }
+
+        return;
+    }
+
+    void ShowSceneGui() {
+        // Main Body of window
+        if (!ImGui::Begin("Scene View", NULL)) {
+            ImGui::End();
+            return;
+        }
+
+        ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
+
+        // Text
+        ImGui::Text("A list of objects in the scene");
+
+        ///@TODO pull list of objects from current scene, display here
+
+        // End and return
+        ImGui::End();
+        return;
+    }
+
+    void ShowObjectGui() {
+        // Main Body of window
+        if (!ImGui::Begin("Object View", NULL)) {
+            ImGui::End();
+            return;
+        }
+
+        ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
+
+        ///@TODO Take currently selected object and display properties
+
+        // Text
+        ImGui::Text("A list of properties on the object");
+
+        // End and return
+        ImGui::End();
         return;
     }
 }
