@@ -135,7 +135,9 @@ namespace Render {
         std::cout << "Disk Mass: " << Disk.mass() << "\n";
         std::cout << "Ball Mass: " << Ball.mass() << "\n\n";
 
-        bool firstClick = true;
+        bool firstClickL = true;
+        bool firstClickR = true;
+        bool isPhysicsTicking = false;
 
         /* Render Loop */
         while (!glfwWindowShouldClose(window))
@@ -163,22 +165,36 @@ namespace Render {
             // Transform coordinates based on camera position
             camera.Matrix(45.0f, 0.1f, 1000.0f, shaderProgram, "camMatrix");
 
-            Disk.update();
-            Ball.update();
-
-            Disk.detectCollision(Ball);
-            Ball.detectCollision(Disk);
-
-            if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
-                if (firstClick) {
-                    Disk.Impulse(200.0f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(2.0, 0.0, 0.0));
-                    Ball.Impulse(200.0f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(2.0, 0.0, 0.0));
-                    firstClick = false;
+            // toggle physics
+            if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+                if (firstClickL) {
+                    isPhysicsTicking = !isPhysicsTicking;
+                    firstClickL = false;
                 }
-                
+
             }
-            else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
-                firstClick = true;
+            else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
+                firstClickL = true;
+            }
+
+            if (isPhysicsTicking) {
+                Disk.update();
+                Ball.update();
+
+                Disk.detectCollision(Ball);
+                Ball.detectCollision(Disk);
+
+                if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
+                    if (firstClickR) {
+                        Disk.Impulse(200.0f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(2.0, 0.0, 0.0));
+                        Ball.Impulse(200.0f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(2.0, 0.0, 0.0));
+                        firstClickR = false;
+                    }
+
+                }
+                else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
+                    firstClickR = true;
+                }
             }
 
             Disk.render();

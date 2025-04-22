@@ -70,7 +70,7 @@ void RigidBody::detectCollision(const Object& collider) {
         return;
     }
 
-    if (glm::length(Object::location.Position - collider.location.Position) > 14.0 / 8) {
+    if (glm::length(Object::location.Position - collider.location.Position) > 2.0) {
         // collision not possible
         return;
     }
