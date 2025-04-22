@@ -25,6 +25,8 @@ public:
 
     /// @brief Function called once every game tick
     void update();
+
+    static std::string getType();
 };
 
 #endif

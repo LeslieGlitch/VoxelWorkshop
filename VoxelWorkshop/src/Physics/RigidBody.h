@@ -31,6 +31,10 @@ public:
 
     /// @brief Function called once every game tick
     void update();
+
+    void detectCollision(const Object& collider);
+
+    static std::string getType();
 };
 
 #endif

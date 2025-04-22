@@ -104,23 +104,23 @@ namespace Render {
         LocationData location{
             glm::vec3(10.0, 0.0, 0.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale
-            glm::vec4(1.0, 1.0, 1.0, 0.0)// Rotation
+            glm::vec4(0.0, 0.0, 1.0, 1.0)// Rotation
         };
         PhysicsData movement{
-            glm::vec3(0.0, 0.0, -9.0), // Linear Velocity
+            glm::vec3(0.0, 0.0, 9.0), // Linear Velocity
             glm::vec3(0.0, 0.0, 0.01), // Linear Acceleration
-            glm::vec4(1.0, 1.0, 1.0, 0.0), // Rotational Velocity
-            glm::vec4(1.0, 1.0, 1.0, 0.0), // Rotational Acceleration
+            glm::vec4(0.0, 0.0, 0.0, 1.0), // Rotational Velocity
+            glm::vec4(0.0, 0.0, 0.0, 1.0), // Rotational Acceleration
         };
         Disk.setTransformation(location);
         Disk.setPhysics(movement);
-        Disk.setMaterial(wood);
+        Disk.setMaterial(iron);
 
         RigidBody Ball("Sphere.bm");
         location = {
             glm::vec3(-10.0, 0.0, 0.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale
-            glm::vec4(1.0, 1.0, 1.0, 0.0)// Rotation
+            glm::vec4(1.0, 1.0, 1.0, 1.0)// Rotation
         };
         movement = {
             glm::vec3(0.0, 0.0, 9.0), // Linear Velocity
@@ -131,6 +131,9 @@ namespace Render {
         Ball.setTransformation(location);
         Ball.setPhysics(movement);
         Ball.setMaterial(stone);
+
+        std::cout << "Disk Mass: " << Disk.mass() << "\n";
+        std::cout << "Ball Mass: " << Ball.mass() << "\n\n";
 
         bool firstClick = true;
 
@@ -162,6 +165,9 @@ namespace Render {
 
             Disk.update();
             Ball.update();
+
+            Disk.detectCollision(Ball);
+            Ball.detectCollision(Disk);
 
             if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
                 if (firstClick) {

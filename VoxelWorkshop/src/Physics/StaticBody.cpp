@@ -35,3 +35,7 @@ void StaticBody::update() {
     Object::update();
     return;
 }
+
+std::string StaticBody::getType() {
+    return "Static";
+}

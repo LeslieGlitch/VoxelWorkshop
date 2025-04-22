@@ -23,6 +23,8 @@ struct PhysicsData {
 class Object {
 protected:
     const float delta = 1.0f / 60.0f;
+
+    float collisionCooldown = 0;
 public:
     // Where the object is and is going
     LocationData location;
@@ -84,6 +86,16 @@ public:
 
     /// @brief Function called once every game tick
     void update();
+
+    static std::string getType();
+
+    /// @brief Detects if there is a collision between self and another object, applies force to itself
+    /// @param collider Object to test collision with
+    void detectCollision(const Object& collider);
+
+    /// @brief Rotates the bitmap via 3 skews and returns in a larger bitmap
+    /// @return a 14x14x14 bitset of the rotated structure
+    std::bitset<14 * 14 * 14> getRotatedStructure(glm::ivec3) const;
 };
 
 #endif

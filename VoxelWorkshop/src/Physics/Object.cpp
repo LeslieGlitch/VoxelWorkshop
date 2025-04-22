@@ -4,6 +4,8 @@
  * Implementation class for base physics object
  */
 
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "Object.h"
 #include <glm/glm.hpp>
 #include <fstream>
@@ -233,5 +235,103 @@ void Object::start() {
 }
 
 void Object::update() {
+    if (collisionCooldown > 0) collisionCooldown--;
+    return;
+}
+
+std::string Object::getType() {
+    return "Object";
+}
+
+static glm::vec3 quat2Euler(glm::vec4 q) {
+    // roll (x-axis rotation)
+    double sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
+    double cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
+
+    // pitch (y-axis rotation)
+    double sinp = std::sqrt(1 + 2 * (q.w * q.y - q.x * q.z));
+    double cosp = std::sqrt(1 - 2 * (q.w * q.y - q.x * q.z));
+
+    // yaw (z-axis rotation)
+    double siny_cosp = 2 * (q.w * q.z + q.x * q.y);
+    double cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
+
+    return glm::vec3(
+        2 * std::atan2(sinp, cosp) - M_PI / 2, // pitch (x)
+        std::atan2(siny_cosp, cosy_cosp),      // yaw (y)
+        std::atan2(sinr_cosp, cosr_cosp)       // roll (z)
+    );
+}
+
+
+// assumes rotation about (0, 0) in CCW direction
+static glm::vec2 rotateViaSkew(const glm::vec2& origPos, const float& angle) {
+    glm::vec2 result = origPos;
+
+    // compute skew for each step
+    float skewH = -tan(angle / 2);
+    float skewV = sin(angle);
+
+    // horizontal skew
+    result.x = result.x + round(skewH * result.y);
+
+    // vertical skew
+    result.y = result.y + round(skewV * result.x);
+
+    // repeat horizontal skew
+    result.x = result.x + round(skewH * result.y);
+
+    return result;
+}
+
+std::bitset<14 * 14 * 14> Object::getRotatedStructure(glm::ivec3 offset = glm::ivec3(0, 0, 0)) const {
+    // create result bitmask to fill in
+    std::bitset<14 * 14 * 14> result;
+    
+    // iterate over cells in the original structure
+    for (int i = 0; i < Object::structure.solidMask.size(); ++i) {
+        // skip empty cells
+        if (!Object::structure.solidMask[i]) continue;
+
+        // get pitch (x), yaw (y), roll (z)
+        glm::vec3 eulerRot = quat2Euler(Object::location.Rotation);
+        glm::vec4 quat = Object::location.Rotation;
+
+        //std::cout << "Quat : (" << quat.x << ", " << quat.y << ", " << quat.z << ", " << quat.w << ")\n";
+        //std::cout << "Euler: (" << eulerRot.x << ", " << eulerRot.y << ", " << eulerRot.z << ")\n\n";
+
+        // get local coordinates ranging from -4 to 3
+        glm::ivec3 internalCoords = Object::structure.indexToCoords(i) + glm::ivec3(-4, -4, -4);
+
+        // rotate yaw, pitch, then roll
+        glm::ivec3 newCoords = internalCoords;
+        //yaw
+        glm::ivec2 rot = rotateViaSkew(glm::ivec2(newCoords.z, newCoords.x), eulerRot.y);
+        newCoords.z = rot.x;
+        newCoords.x = rot.y;
+        //pitch
+        rot = rotateViaSkew(glm::ivec2(newCoords.z, newCoords.y), eulerRot.x);
+        newCoords.z = rot.x;
+        newCoords.y = rot.y;
+        //roll
+        rot = rotateViaSkew(glm::ivec2(newCoords.x, newCoords.y), eulerRot.z);
+        newCoords.x = rot.x;
+        newCoords.y = rot.y;
+
+        //std::cout << "Old Coords: (" << internalCoords.x << ", " << internalCoords.y << ", " << internalCoords.z << ")\n";
+        //std::cout << "New Coords: (" << newCoords.x << ", " << newCoords.y << ", " << newCoords.z << ")\n\n";
+
+        // offset coordinates to center on offset
+        newCoords += glm::ivec3(7, 7, 7) + offset;
+
+        // assign bit in mask
+        int index = Object::structure.coordsToIndex(newCoords, 14);
+        if (index >= 0)
+            result[index] = true;
+    }
+    return result;
+}
+
+void Object::detectCollision(const Object& collider) {
     return;
 }

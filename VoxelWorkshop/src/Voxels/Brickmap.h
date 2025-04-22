@@ -24,15 +24,12 @@ struct LocationData {
 };
 
 class Brickmap {
-private:
-    std::bitset<BRICKMAP_SIZE * BRICKMAP_SIZE * BRICKMAP_SIZE> solidMask;
-
-    //VisualData* __ptr32 shadingAttribute;
-    //unsigned char colorLOD[3];
-
 public:
+    std::bitset<BRICKMAP_SIZE * BRICKMAP_SIZE * BRICKMAP_SIZE> solidMask;
     Brickmap();
     ~Brickmap();
+    static glm::ivec3 indexToCoords(const int& index, const int& sideLength = BRICKMAP_SIZE);
+    static int coordsToIndex(const glm::ivec3& coords, const int& sideLength = BRICKMAP_SIZE);
     VAO VAO;
     std::string filename = "hSphere.bm";
     unsigned int generateMesh(const LocationData &location, const Material& material);

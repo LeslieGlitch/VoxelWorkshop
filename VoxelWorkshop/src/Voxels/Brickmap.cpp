@@ -31,7 +31,7 @@ Brickmap::~Brickmap() {
     VAO.Delete();
 }
 
-static glm::vec3 indexToCoords(const int& index, const int& sideLength) {
+glm::ivec3 Brickmap::indexToCoords(const int& index, const int& sideLength) {
     // Guard clause, index out of range
     if (index < 0 || index > sideLength * sideLength * sideLength) {
         return glm::vec3(-1.0, -1.0, -1.0);
@@ -44,7 +44,7 @@ static glm::vec3 indexToCoords(const int& index, const int& sideLength) {
     );
 }
 
-static int coordsToIndex(const glm::vec3& coords, const int& sideLength) {
+int Brickmap::coordsToIndex(const glm::ivec3& coords, const int& sideLength) {
     // Guard clauses, coords out of range
     if (coords.x < 0 || coords.x > sideLength) {
         return -1;
