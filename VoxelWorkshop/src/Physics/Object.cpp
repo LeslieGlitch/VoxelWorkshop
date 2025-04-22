@@ -326,7 +326,7 @@ std::bitset<14 * 14 * 14> Object::getRotatedStructure(glm::ivec3 offset = glm::i
 
         // assign bit in mask
         int index = Object::structure.coordsToIndex(newCoords, 14);
-        if (index >= 0)
+        if (index >= 0 && index < result.size())
             result[index] = true;
     }
     return result;

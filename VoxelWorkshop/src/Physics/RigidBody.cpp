@@ -70,7 +70,7 @@ void RigidBody::detectCollision(const Object& collider) {
         return;
     }
 
-    if (glm::length(Object::location.Position - collider.location.Position) > 2.0) {
+    if (glm::length(Object::location.Position - collider.location.Position) > 100) {
         // collision not possible
         return;
     }
@@ -87,6 +87,7 @@ void RigidBody::detectCollision(const Object& collider) {
 
     // create bitset big enough to hold rotated object
     std::bitset <14 * 14 * 14> rotatedSelf = this->getRotatedStructure(glm::ivec3(0, 0, 0));
+    std::cout << "first done\n";
     std::bitset<14 * 14 * 14> rotatedCollider = collider.getRotatedStructure(offset);
 
     int origCount = this->structure.voxelCount();
@@ -115,9 +116,10 @@ void RigidBody::detectCollision(const Object& collider) {
 
     std::cout << "Acc Before: " << glm::length(this->movement.linearAcceleration) << "\n";
     this->Impulse(collider.mass() * glm::length(collider.movement.linearVelocity - this->movement.linearVelocity), glm::normalize(collider.movement.linearVelocity - this->movement.linearVelocity), centerOfCollision);
-    std::cout << "Acc After : " << glm::length(this->movement.linearAcceleration) << "\n\n";
+    std::cout << "Acc After : " << glm::length(this->movement.linearAcceleration) << "\n";
 
-    collisionCooldown = 20;
+    collisionCooldown = 5 * ceil(log(glm::length(this->movement.linearVelocity)));
+    std::cout << "Collision cooldown set to: " << collisionCooldown << "\n\n";
 }
 
 std::string RigidBody::getType() {

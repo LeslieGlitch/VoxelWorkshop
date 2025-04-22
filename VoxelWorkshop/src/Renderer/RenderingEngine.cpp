@@ -100,7 +100,7 @@ namespace Render {
         Camera camera(screenSize[0], screenSize[1], glm::vec3(2.0f, 2.0f, 2.0f));
 
         // Test object for movement
-        RigidBody Disk("Disk.bm");
+        RigidBody Disk("hBox.bm");
         LocationData location{
             glm::vec3(10.0, 0.0, 0.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale
@@ -114,9 +114,9 @@ namespace Render {
         };
         Disk.setTransformation(location);
         Disk.setPhysics(movement);
-        Disk.setMaterial(iron);
+        Disk.setMaterial(clay);
 
-        RigidBody Ball("Sphere.bm");
+        RigidBody Ball("hSphere.bm");
         location = {
             glm::vec3(-10.0, 0.0, 0.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale
@@ -130,7 +130,7 @@ namespace Render {
         };
         Ball.setTransformation(location);
         Ball.setPhysics(movement);
-        Ball.setMaterial(stone);
+        Ball.setMaterial(dirt);
 
         std::cout << "Disk Mass: " << Disk.mass() << "\n";
         std::cout << "Ball Mass: " << Ball.mass() << "\n\n";
