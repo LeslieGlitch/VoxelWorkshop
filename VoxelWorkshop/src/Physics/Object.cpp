@@ -83,6 +83,14 @@ float Object::mass() const {
     return Object::structure.voxelCount() * Object::material.getDensity() * VOXEL_SIZE;
 }
 
+void Object::resetAcceleration() {
+    // reset acceleration to prevent forces compounding over multiple frames
+    PhysicsData resetPhysics = Object::movement;
+    resetPhysics.linearAcceleration = glm::vec3(0.0, 0.0, 0.0);
+    resetPhysics.rotationalAcceleration = glm::vec4(0.0, 0.0, 1.0, 0.0);
+    Object::setPhysics(resetPhysics);
+}
+
 void Object::Impulse(float impulse, glm::vec3 direction, glm::vec3 offsetFromCenterOfMass) {
     return;
 }
@@ -260,7 +268,9 @@ void Object::start() {
 }
 
 void Object::update() {
+    // tick down collision cooldown
     if (collisionCooldown > 0) collisionCooldown--;
+
     return;
 }
 

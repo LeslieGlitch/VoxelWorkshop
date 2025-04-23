@@ -34,10 +34,8 @@ unsigned int Scene::newRigid() {
     return rigidBodies.size() - 1;
 }
 
-#include <iostream>
 unsigned int Scene::newRigid(std::string filename) {
     rigidBodies.emplace_back(filename);
-    std::cout << rigidBodies.size();
     return rigidBodies.size() - 1;
 }
 
@@ -107,6 +105,18 @@ void Scene::detectAllCollisions() {
             if (i == j) continue;
             rigidBodies.at(i).detectCollision(rigidBodies.at(j));
         }
+    }
+}
+
+void Scene::resetAllAcceleration() {
+    if (!isRunning) return;
+
+    for (int i = 0; i < staticBodies.size(); ++i) {
+        staticBodies.at(i).resetAcceleration();
+    }
+
+    for (int i = 0; i < rigidBodies.size(); ++i) {
+        rigidBodies.at(i).resetAcceleration();
     }
 }
 

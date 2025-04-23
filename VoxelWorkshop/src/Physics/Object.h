@@ -71,6 +71,8 @@ public:
     /// @return Mass of the object
     float mass() const;
 
+    void resetAcceleration();
+
     /// @brief Apply a force impulse to the object
     /// @param impulse Total impulse in N*s
     /// @param direction The direction of the force applied

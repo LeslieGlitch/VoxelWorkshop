@@ -28,9 +28,9 @@
 const unsigned int screenSize[] = { 1280, 720 };
 
 namespace Render {
-    void ShowMenuBar();
-    void ShowSceneGui();
-    void ShowObjectGui();
+    void ShowMenuBar(Scene&);
+    void ShowSceneGui(Scene&);
+    void ShowObjectGui(Scene&);
 
     // local variables
     const GLdouble pi = 3.1415926535897932384626433832795;
@@ -103,7 +103,7 @@ namespace Render {
 
         unsigned int diskIndex = currentScene.newRigid("Disk.bm");
         LocationData location{
-            glm::vec3(10.0, 0.0, 0.0), // Position
+            glm::vec3(0.0, 10.0, 0.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale
             glm::vec4(0.0, 0.0, 1.0, 1.0)// Rotation
         };
@@ -150,9 +150,9 @@ namespace Render {
             ImGui::NewFrame();
 
             // GUI windows
-            ShowMenuBar(); // Save/Load scene and play/pause/stop simulation
-            ShowSceneGui(); // Objects in active scene
-            ShowObjectGui(); // Object properties
+            ShowMenuBar(currentScene); // Save/Load scene and play/pause/stop simulation
+            ShowSceneGui(currentScene); // Objects in active scene
+            ShowObjectGui(currentScene); // Object properties
 
             // Specify the color of the background
             glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
@@ -168,14 +168,6 @@ namespace Render {
             // toggle physics
             if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
                 if (firstClickL) {
-                    if (isPhysicsTicking) {
-                        isPhysicsTicking = false;
-                        currentScene.pause();
-                    }
-                    else {
-                        isPhysicsTicking = true;
-                        currentScene.play();
-                    }
                     firstClickL = false;
                 }
 
@@ -205,8 +197,9 @@ namespace Render {
                 firstClickR = true;
             }
 
-            currentScene.updateAll();
+            currentScene.resetAllAcceleration();
             currentScene.detectAllCollisions();
+            currentScene.updateAll();
 
             currentScene.renderAll();
 
@@ -229,7 +222,7 @@ namespace Render {
         return 0;
     }
 
-    void ShowMenuBar() {
+    void ShowMenuBar(Scene& currentScene) {
         // Menu Bar
         if (ImGui::BeginMainMenuBar()) {
             if (ImGui::BeginMenu("File")) {
@@ -248,7 +241,7 @@ namespace Render {
         return;
     }
 
-    void ShowSceneGui() {
+    void ShowSceneGui(Scene& currentScene) {
         // Main Body of window
         if (!ImGui::Begin("Scene View", NULL)) {
             ImGui::End();
@@ -256,6 +249,19 @@ namespace Render {
         }
 
         ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
+
+        // Scene play/pause/stop
+        if (ImGui::Button("Play")) {
+            currentScene.play();
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Pause")) {
+            currentScene.pause();
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Stop")) {
+            currentScene.reset();
+        }
 
         // Text
         ImGui::Text("A list of objects in the scene");
@@ -267,7 +273,7 @@ namespace Render {
         return;
     }
 
-    void ShowObjectGui() {
+    void ShowObjectGui(Scene& currentScene) {
         // Main Body of window
         if (!ImGui::Begin("Object View", NULL)) {
             ImGui::End();

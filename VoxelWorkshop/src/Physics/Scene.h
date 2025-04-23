@@ -41,6 +41,7 @@ public:
     void startAll();
     void updateAll();
     void detectAllCollisions();
+    void resetAllAcceleration();
 
     // File actions
     void saveToFolder(std::string directory);

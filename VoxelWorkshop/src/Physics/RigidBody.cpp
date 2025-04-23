@@ -56,18 +56,19 @@ void RigidBody::update() {
     // Perform Base update logic
     Object::update();
 
+    // Apply gravitational force
+    RigidBody::Impulse(RigidBody::mass() * 9.8f * delta, -RigidBody::location.Position);
+
     // Update location data
     LocationData newLocation = RigidBody::location;
     PhysicsData newPhysics = RigidBody::movement;
     newLocation.Position += RigidBody::movement.linearVelocity * delta;
     newPhysics.linearVelocity += RigidBody::movement.linearAcceleration * delta;
-    newPhysics.linearAcceleration = glm::normalize(-RigidBody::location.Position) * 9.8f;
 
     // Update rotation data
     newLocation.Rotation = glm::rotate(RigidBody::movement.rotationalVelocity.w * delta, glm::vec3(RigidBody::movement.rotationalVelocity.x, RigidBody::movement.rotationalVelocity.y, RigidBody::movement.rotationalVelocity.z)) * newLocation.Rotation;
     newPhysics.rotationalVelocity = glm::rotate(RigidBody::movement.rotationalAcceleration.w * delta, glm::vec3(RigidBody::movement.rotationalAcceleration.x, RigidBody::movement.rotationalAcceleration.y, RigidBody::movement.rotationalAcceleration.z)) * newPhysics.rotationalVelocity;
-    newPhysics.rotationalAcceleration = glm::vec4(0.0, 0.0, 1.0, 0.0);
-
+    
     setPhysics(newPhysics);
     setTransformation(newLocation);
 
@@ -80,7 +81,6 @@ bool isMovingApart(const Object& self, const Object& collider) {
     return glm::dot(relPos, relVel) > 0.0;
 }
 
-#include <iostream>
 void RigidBody::detectCollision(const Object& collider) {
     if (collisionCooldown > 0) {
         // too soon after last collision
@@ -96,8 +96,6 @@ void RigidBody::detectCollision(const Object& collider) {
         // don't collide objects already moving away from one another
         return;
     }
-
-    std::cout << "Objects are close enough to possible collide\n";
 
     // get collider position relative to self
     glm::ivec3 offset = (collider.location.Position - this->location.Position);
@@ -115,10 +113,8 @@ void RigidBody::detectCollision(const Object& collider) {
 
     if (rotatedSelf.count() == 0) {
         // no collision
-        std::cout << "found no collision\n\n";
         return;
     }
-    std::cout << "found collision\n\n";
     // find center of collision
     glm::vec3 centerOfCollision(0, 0, 0);
     for (int i = 0; i < 14 * 14 * 14; ++i) {
