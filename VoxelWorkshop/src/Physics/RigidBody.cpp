@@ -28,6 +28,24 @@ RigidBody::RigidBody(Brickmap structure) {
     RigidBody::structure = structure;
 }
 
+RigidBody::RigidBody(const RigidBody& source) {
+    RigidBody::location = source.location;
+    RigidBody::movement = source.movement;
+    RigidBody::material = source.material;
+    RigidBody::structure = source.structure;
+    RigidBody::indexArraySize = source.indexArraySize;
+}
+
+RigidBody RigidBody::operator=(const RigidBody& right) {
+    RigidBody result;
+    result.location = right.location;
+    result.movement = right.movement;
+    result.material = right.material;
+    result.structure = right.structure;
+    result.indexArraySize = right.indexArraySize;
+    return result;
+}
+
 void RigidBody::start() {
     // Perform Base start logic
     Object::start();

@@ -26,6 +26,11 @@ Brickmap::Brickmap() {
     return;
 }
 
+Brickmap::Brickmap(const Brickmap& source) {
+    Brickmap::solidMask = source.solidMask;
+    Brickmap::VAO.ID = source.VAO.ID;
+}
+
 Brickmap::~Brickmap() {
     // Delete the vertex array object we've created
     VAO.Delete();
@@ -175,6 +180,11 @@ unsigned int Brickmap::generateMesh(const LocationData& location, const Material
     return indices.size();
 }
 
+void Brickmap::render(const unsigned int& indexArraySize) {
+    VAO.Bind();
+    glDrawElements(GL_TRIANGLES, indexArraySize, GL_UNSIGNED_INT, 0);
+}
+
 int Brickmap::voxelCount() const {
     return solidMask.count();
 }
@@ -212,7 +222,7 @@ bool Brickmap::loadFromFile(const std::string& fileName) {
     }
 
     // Update filename
-    Brickmap::filename = fileName;
+    *Brickmap::filename = fileName;
 
     // Cleanup
     file.close();

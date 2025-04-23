@@ -48,6 +48,12 @@ public:
     /// @brief Contructor with Brickmap
     Object(Brickmap structure);
 
+    /// @brief Copy Constructor
+    /// @param source Object to be copied
+    Object(const Object& source);
+
+    Object operator=(const Object& right);
+
     /// @brief Updates the object position and regenerates the mesh
     /// @param position new position for the object
     void setTransformation(const LocationData& location);

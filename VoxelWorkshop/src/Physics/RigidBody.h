@@ -20,6 +20,12 @@ public:
     /// @brief Contructor with Brickmap
     RigidBody(Brickmap structure);
 
+    /// @brief Copy Constructor
+    /// @param source Object to be copied
+    RigidBody(const RigidBody& source);
+
+    RigidBody operator=(const RigidBody& right);
+
     /// @brief Apply a force impulse to the object
     /// @param impulse Total impulse in N*s
     /// @param direction The direction of the force applied

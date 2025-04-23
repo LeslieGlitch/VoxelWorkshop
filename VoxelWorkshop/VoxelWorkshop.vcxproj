@@ -142,6 +142,7 @@
     <ClCompile Include="src\Physics\Object.cpp" />
     <ClCompile Include="src\Physics\PhysicsEngine.cpp" />
     <ClCompile Include="src\Physics\RigidBody.cpp" />
+    <ClCompile Include="src\Physics\Scene.cpp" />
     <ClCompile Include="src\Physics\StaticBody.cpp" />
     <ClCompile Include="src\Renderer\Camera.cpp" />
     <ClCompile Include="src\Voxels\Brickgrid.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="src\Physics\Object.h" />
     <ClInclude Include="src\Physics\PhysicsEngine.hpp" />
     <ClInclude Include="src\Physics\RigidBody.h" />
+    <ClInclude Include="src\Physics\Scene.h" />
     <ClInclude Include="src\Physics\StaticBody.h" />
     <ClInclude Include="src\Renderer\Camera.h" />
     <ClInclude Include="src\Voxels\Brickgrid.h" />

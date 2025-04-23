@@ -24,6 +24,24 @@ StaticBody::StaticBody(Brickmap structure) {
     StaticBody::structure = structure;
 }
 
+StaticBody::StaticBody(const StaticBody& source) {
+    StaticBody::location = source.location;
+    StaticBody::movement = source.movement;
+    StaticBody::material = source.material;
+    StaticBody::structure = source.structure;
+    StaticBody::indexArraySize = source.indexArraySize;
+}
+
+StaticBody StaticBody::operator=(const StaticBody& right) {
+    StaticBody result;
+    result.location = right.location;
+    result.movement = right.movement;
+    result.material = right.material;
+    result.structure = right.structure;
+    result.indexArraySize = right.indexArraySize;
+    return result;
+}
+
 void StaticBody::start() {
     // Perform Base start logic
     Object::start();

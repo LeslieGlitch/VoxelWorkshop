@@ -34,6 +34,27 @@ Object::Object(std::string filename) {
 
 Object::Object(Brickmap structure) {
     Object::structure = structure;
+    indexArraySize = Object::structure.generateMesh(Object::location, Object::material);
+    // Link mesh to the VAO
+    Object::structure.linkMesh();
+}
+
+Object::Object(const Object& source) {
+    Object::location = source.location;
+    Object::movement = source.movement;
+    Object::material = source.material;
+    Object::structure = source.structure;
+    Object::indexArraySize = source.indexArraySize;
+}
+
+Object Object::operator=(const Object& right) {
+    Object result;
+    result.location = right.location;
+    result.movement = right.movement;
+    result.material = right.material;
+    result.structure = right.structure;
+    result.indexArraySize = right.indexArraySize;
+    return result;
 }
 
 void Object::setTransformation(const LocationData& location) {
@@ -55,9 +76,7 @@ void Object::setMaterial(const Material& material) {
 }
 
 void Object::render() {
-    Object::structure.VAO.Bind();
-    // Draw primitives, number of indices, datatype of indices, index of indices
-    glDrawElements(GL_TRIANGLES, indexArraySize, GL_UNSIGNED_INT, 0);
+    Object::structure.render(indexArraySize);
 }
 
 float Object::mass() const {
@@ -223,7 +242,9 @@ bool Object::saveToFile(const std::string& fileName) {
     file << static_cast<unsigned char>(Object::material.getMaterial());
 
     // Save Brickmap filename
-    std::string filename = Object::structure.filename.substr(0, 15);
+
+    std::string filename = *Object::structure.filename;
+    filename = filename.substr(0, 15);
     for (int i = filename.length(); i < 15; ++i) {
         filename.append(" ");
     }

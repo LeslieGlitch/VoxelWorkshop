@@ -20,6 +20,12 @@ public:
     /// @brief Contructor with Brickmap
     StaticBody(Brickmap structure);
 
+    /// @brief Copy Constructor
+    /// @param source Object to be copied
+    StaticBody(const StaticBody& source);
+
+    StaticBody operator=(const StaticBody& right);
+
     /// @brief Function called when object spawns
     void start();
 

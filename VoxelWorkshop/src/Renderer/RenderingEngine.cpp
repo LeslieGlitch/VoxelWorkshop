@@ -23,8 +23,7 @@
 #include "VAO.h"
 #include "Camera.h"
 
-#include "../Voxels/Brickgrid.h"
-#include "../Physics/PhysicsEngine.hpp"
+#include "../Physics/Scene.h"
 
 const unsigned int screenSize[] = { 1280, 720 };
 
@@ -99,8 +98,10 @@ namespace Render {
 
         Camera camera(screenSize[0], screenSize[1], glm::vec3(0.0f, 0.0f, 15.0f));
 
-        // Test object for movement
-        RigidBody Disk("Disk.bm");
+        // Test Scene
+        Scene currentScene;
+
+        unsigned int diskIndex = currentScene.newRigid("Disk.bm");
         LocationData location{
             glm::vec3(10.0, 0.0, 0.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale
@@ -112,11 +113,11 @@ namespace Render {
             glm::vec4(1.0, 0.0, 1.0, 1.0), // Rotational Velocity
             glm::vec4(0.0, 0.0, 1.0, 0.0), // Rotational Acceleration
         };
-        Disk.setTransformation(location);
-        Disk.setPhysics(movement);
-        Disk.setMaterial(clay);
+        currentScene.rigidBodies.at(diskIndex).setTransformation(location);
+        currentScene.rigidBodies.at(diskIndex).setPhysics(movement);
+        currentScene.rigidBodies.at(diskIndex).setMaterial(clay);
 
-        RigidBody Ball("hSphere.bm");
+        unsigned int sphereIndex = currentScene.newRigid("hSphere.bm");
         location = {
             glm::vec3(-10.0, 0.0, 0.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale
@@ -128,12 +129,11 @@ namespace Render {
             glm::vec4(0.0, 0.0, 1.0, 1.0), // Rotational Velocity
             glm::vec4(0.0, 0.0, 1.0, 0.0), // Rotational Acceleration
         };
-        Ball.setTransformation(location);
-        Ball.setPhysics(movement);
-        Ball.setMaterial(dirt);
+        currentScene.rigidBodies.at(sphereIndex).setTransformation(location);
+        currentScene.rigidBodies.at(sphereIndex).setPhysics(movement);
+        currentScene.rigidBodies.at(sphereIndex).setMaterial(dirt);
 
-        std::cout << "Disk Mass: " << Disk.mass() << "\n";
-        std::cout << "Ball Mass: " << Ball.mass() << "\n\n";
+        currentScene.startAll();
 
         bool firstClickL = true;
         bool firstClickR = true;
@@ -168,7 +168,14 @@ namespace Render {
             // toggle physics
             if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
                 if (firstClickL) {
-                    isPhysicsTicking = !isPhysicsTicking;
+                    if (isPhysicsTicking) {
+                        isPhysicsTicking = false;
+                        currentScene.pause();
+                    }
+                    else {
+                        isPhysicsTicking = true;
+                        currentScene.play();
+                    }
                     firstClickL = false;
                 }
 
@@ -187,8 +194,8 @@ namespace Render {
 
                     //std::cout << glm::distance(Disk.location.Position, Ball.location.Position) << "\n";
 
-                    std::cout << "Box Location: (" << Disk.location.Position.x << ", " << Disk.location.Position.y << ", " << Disk.location.Position.z << ")\n";
-                    std::cout << "Box Rotation: (" << Disk.location.Rotation.w << ", " << Disk.location.Rotation.x << ", " << Disk.location.Rotation.y << ", " << Disk.location.Rotation.z << ")\n\n";
+                    std::cout << "Box Location: (" << currentScene.rigidBodies.at(diskIndex).location.Position.x << ", " << currentScene.rigidBodies.at(diskIndex).location.Position.y << ", " << currentScene.rigidBodies.at(diskIndex).location.Position.z << ")\n";
+                    std::cout << "Box Rotation: (" << currentScene.rigidBodies.at(diskIndex).location.Rotation.w << ", " << currentScene.rigidBodies.at(diskIndex).location.Rotation.x << ", " << currentScene.rigidBodies.at(diskIndex).location.Rotation.y << ", " << currentScene.rigidBodies.at(diskIndex).location.Rotation.z << ")\n\n";
 
                     firstClickR = false;
                 }
@@ -198,18 +205,10 @@ namespace Render {
                 firstClickR = true;
             }
 
-            if (isPhysicsTicking) {
-                Disk.update();
-                Ball.update();
+            currentScene.updateAll();
+            currentScene.detectAllCollisions();
 
-                Disk.detectCollision(Ball);
-                Ball.detectCollision(Disk);
-
-                
-            }
-
-            Disk.render();
-            Ball.render();
+            currentScene.renderAll();
 
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -219,7 +218,6 @@ namespace Render {
         }
 
         /* Cleanup */
-        Physics::quitPhysics();
         shaderProgram.Delete();
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();

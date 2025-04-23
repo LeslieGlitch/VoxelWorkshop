@@ -27,12 +27,14 @@ class Brickmap {
 public:
     std::bitset<BRICKMAP_SIZE * BRICKMAP_SIZE * BRICKMAP_SIZE> solidMask;
     Brickmap();
+    Brickmap(const Brickmap& source);
     ~Brickmap();
     static glm::ivec3 indexToCoords(const int& index, const int& sideLength = BRICKMAP_SIZE);
     static int coordsToIndex(const glm::ivec3& coords, const int& sideLength = BRICKMAP_SIZE);
     VAO VAO;
-    std::string filename = "hSphere.bm";
+    std::string* filename = new std::string("hSphere.bm");
     unsigned int generateMesh(const LocationData &location, const Material& material);
+    void render(const unsigned int& indexArraySize);
     void linkMesh();
     int voxelCount() const;
 

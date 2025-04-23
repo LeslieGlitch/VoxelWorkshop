@@ -90,6 +90,9 @@
     <ClCompile Include="..\Linking\include\imgui\imgui_widgets.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Physics\Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
@@ -177,6 +180,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Linking\include\imgui\imstb_truetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Physics\Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
