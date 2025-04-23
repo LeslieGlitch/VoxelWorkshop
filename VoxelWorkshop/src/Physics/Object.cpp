@@ -87,7 +87,7 @@ void Object::resetAcceleration() {
     // reset acceleration to prevent forces compounding over multiple frames
     PhysicsData resetPhysics = Object::movement;
     resetPhysics.linearAcceleration = glm::vec3(0.0, 0.0, 0.0);
-    resetPhysics.rotationalAcceleration = glm::fquat(0.0, 0.0, 1.0, 0.0);
+    resetPhysics.rotationalAcceleration = glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
     Object::setPhysics(resetPhysics);
 }
 
@@ -402,7 +402,7 @@ void Object::hardRotateStructure() {
     LocationData newLoc{
         location.Position, // Position
         location.Scale, // Scale
-        glm::fquat(0.0, 0.0, 1.0, 0.0)// Rotation
+        glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f)) // Rotation
     };
     setTransformation(newLoc);
 }

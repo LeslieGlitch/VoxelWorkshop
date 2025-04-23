@@ -66,12 +66,8 @@ void RigidBody::update() {
     newPhysics.linearVelocity += RigidBody::movement.linearAcceleration * delta;
 
     // Update rotation data
-    glm::fquat deltaQuat = RigidBody::movement.rotationalVelocity;
-    deltaQuat.w *= delta / (2.0f * 3.1416f);
-    newLocation.Rotation = deltaQuat * newLocation.Rotation;
-    deltaQuat = RigidBody::movement.rotationalAcceleration;
-    deltaQuat.w *= delta / (2.0f * 3.1416f);
-    newPhysics.rotationalVelocity = deltaQuat * newPhysics.rotationalVelocity;
+    newLocation.Rotation = glm::angleAxis(glm::angle(RigidBody::movement.rotationalVelocity) * delta, glm::axis(RigidBody::movement.rotationalVelocity)) * newLocation.Rotation;
+    newPhysics.rotationalVelocity = glm::angleAxis(glm::angle(RigidBody::movement.rotationalAcceleration) * delta, glm::axis(RigidBody::movement.rotationalAcceleration)) * newPhysics.rotationalVelocity;
     
     setPhysics(newPhysics);
     setTransformation(newLocation);
@@ -152,7 +148,7 @@ void RigidBody::Impulse(float impulse, glm::vec3 direction, glm::vec3 offsetFrom
         glm::vec3 rotAxis = glm::normalize(glm::cross(offsetFromCenterOfMass, direction));
         float projCoef = glm::dot(glm::normalize(direction), glm::vec3(glm::rotate((3.1416f / 2), rotAxis) * glm::normalize(glm::vec4(offsetFromCenterOfMass, 1.0))));
         float accMagnitude = (impulse * projCoef * glm::length(offsetFromCenterOfMass)) / (RigidBody::mass() * delta);
-        newPhysics.rotationalAcceleration = glm::fquat(accMagnitude, rotAxis) * newPhysics.rotationalAcceleration;
+        newPhysics.rotationalAcceleration = glm::angleAxis(glm::degrees(accMagnitude), rotAxis) * newPhysics.rotationalAcceleration;
         std::cout << "newRot: (" << newPhysics.rotationalAcceleration.w << ", " << newPhysics.rotationalAcceleration.x << ", " << newPhysics.rotationalAcceleration.y << ", " << newPhysics.rotationalAcceleration.z << ")\n";
     }
 

@@ -105,13 +105,13 @@ namespace Render {
         LocationData location{
             glm::vec3(0.0, 10.0, 0.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale
-            glm::fquat(0.0, 0.0, 1.0, 0.0)// Rotation
+            glm::angleAxis(0.01f, glm::vec3(0.0f, 1.0f, 0.0f))// Rotation
         };
         PhysicsData movement{
             glm::vec3(0.0, 0.0, 9.0), // Linear Velocity
             glm::vec3(0.0, 0.0, 0.0), // Linear Acceleration
-            glm::fquat(0.2, 0.0, 1.0, 0.0), // Rotational Velocity
-            glm::fquat(0.0, 0.0, 1.0, 0.00), // Rotational Acceleration
+            glm::angleAxis(6.28f, glm::vec3(0.0f, 1.0f, 0.0f)), // Rotational Velocity
+            glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f)), // Rotational Acceleration
         };
         currentScene.rigidBodies.at(diskIndex).setTransformation(location);
         currentScene.rigidBodies.at(diskIndex).setPhysics(movement);
@@ -121,13 +121,13 @@ namespace Render {
         location = {
             glm::vec3(-10.0, 0.0, 0.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale
-            glm::fquat(0.0, 0.0, 1.0, 0.0)// Rotation
+            glm::angleAxis(1.0f, glm::vec3(0.0f, 1.0f, 0.0f))// Rotation
         };
         movement = {
             glm::vec3(0.0, 0.0, 9.0), // Linear Velocity
-            glm::vec3(0.0, 0.0, 0.01), // Linear Acceleration
-            glm::fquat(1.0, 0.0, 1.0, 0.0), // Rotational Velocity
-            glm::fquat(0.0, 0.0, 1.0, 0.0), // Rotational Acceleration
+            glm::vec3(0.0, 0.0, 0.0), // Linear Acceleration
+            glm::angleAxis(-3.0f, glm::vec3(1.0f, 0.0f, 0.0f)), // Rotational Velocity
+            glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f)), // Rotational Acceleration
         };
         currentScene.rigidBodies.at(sphereIndex).setTransformation(location);
         currentScene.rigidBodies.at(sphereIndex).setPhysics(movement);
@@ -189,9 +189,9 @@ namespace Render {
 
                     //std::cout << glm::distance(Disk.location.Position, Ball.location.Position) << "\n";
 
-                    std::cout << "Box Location: (" << currentScene.rigidBodies.at(diskIndex).location.Position.x << ", " << currentScene.rigidBodies.at(diskIndex).location.Position.y << ", " << currentScene.rigidBodies.at(diskIndex).location.Position.z << ")\n";
-                    std::cout << "Box Rotation: (" << currentScene.rigidBodies.at(diskIndex).location.Rotation.w << ", " << currentScene.rigidBodies.at(diskIndex).location.Rotation.x << ", " << currentScene.rigidBodies.at(diskIndex).location.Rotation.y << ", " << currentScene.rigidBodies.at(diskIndex).location.Rotation.z << ")\n\n";
-                    std::cout << "Box RotVel  : (" << currentScene.rigidBodies.at(diskIndex).movement.rotationalVelocity.w << ", " << currentScene.rigidBodies.at(diskIndex).movement.rotationalVelocity.x << ", " << currentScene.rigidBodies.at(diskIndex).movement.rotationalVelocity.y << ", " << currentScene.rigidBodies.at(diskIndex).movement.rotationalVelocity.z << ")\n\n";
+                    //std::cout << "Box Location: (" << currentScene.staticBodies.at(sphereIndex).location.Position.x << ", " << currentScene.staticBodies.at(sphereIndex).location.Position.y << ", " << currentScene.staticBodies.at(sphereIndex).location.Position.z << ")\n";
+                    //std::cout << "Box Rotation: (" << currentScene.staticBodies.at(sphereIndex).location.Rotation.w << ", " << currentScene.staticBodies.at(sphereIndex).location.Rotation.x << ", " << currentScene.staticBodies.at(sphereIndex).location.Rotation.y << ", " << currentScene.staticBodies.at(sphereIndex).location.Rotation.z << ")\n\n";
+                    //std::cout << "Box RotVel  : (" << currentScene.staticBodies.at(sphereIndex).movement.rotationalVelocity.w << ", " << currentScene.staticBodies.at(sphereIndex).movement.rotationalVelocity.x << ", " << currentScene.staticBodies.at(sphereIndex).movement.rotationalVelocity.y << ", " << currentScene.staticBodies.at(sphereIndex).movement.rotationalVelocity.z << ")\n\n";
 
                     firstClickR = false;
                 }
