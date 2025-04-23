@@ -46,10 +46,9 @@ void RigidBody::update() {
     newPhysics.linearAcceleration = glm::normalize(-RigidBody::location.Position) * 9.8f;
 
     // Update rotation data
-    newLocation.Rotation += RigidBody::movement.rotationalVelocity * delta;
-    newLocation.Rotation = glm::normalize(newLocation.Rotation);
-    newPhysics.rotationalVelocity += RigidBody::movement.rotationalAcceleration * delta;
-    newPhysics.rotationalAcceleration = glm::vec4(1.0, 1.0, 1.0, 0.0);
+    newLocation.Rotation = glm::rotate(RigidBody::movement.rotationalVelocity.w * delta, glm::vec3(RigidBody::movement.rotationalVelocity.x, RigidBody::movement.rotationalVelocity.y, RigidBody::movement.rotationalVelocity.z)) * newLocation.Rotation;
+    newPhysics.rotationalVelocity = glm::rotate(RigidBody::movement.rotationalAcceleration.w * delta, glm::vec3(RigidBody::movement.rotationalAcceleration.x, RigidBody::movement.rotationalAcceleration.y, RigidBody::movement.rotationalAcceleration.z)) * newPhysics.rotationalVelocity;
+    newPhysics.rotationalAcceleration = glm::vec4(0.0, 0.0, 1.0, 0.0);
 
     setPhysics(newPhysics);
     setTransformation(newLocation);
@@ -60,7 +59,7 @@ void RigidBody::update() {
 bool isMovingApart(const Object& self, const Object& collider) {
     glm::vec3 relPos = self.location.Position - collider.location.Position;
     glm::vec3 relVel = self.movement.linearVelocity - collider.movement.linearVelocity;
-    return glm::dot(relPos, relVel) < 0.0;
+    return glm::dot(relPos, relVel) > 0.0;
 }
 
 #include <iostream>
@@ -70,7 +69,7 @@ void RigidBody::detectCollision(const Object& collider) {
         return;
     }
 
-    if (glm::length(Object::location.Position - collider.location.Position) > 100) {
+    if (glm::distance(Object::location.Position, collider.location.Position) > 1.75) {
         // collision not possible
         return;
     }
@@ -83,18 +82,15 @@ void RigidBody::detectCollision(const Object& collider) {
     std::cout << "Objects are close enough to possible collide\n";
 
     // get collider position relative to self
-    glm::ivec3 offset = collider.location.Position - this->location.Position;
+    glm::ivec3 offset = (collider.location.Position - this->location.Position);
+    offset *= 0.125;
 
     // create bitset big enough to hold rotated object
     std::bitset <14 * 14 * 14> rotatedSelf = this->getRotatedStructure(glm::ivec3(0, 0, 0));
-    std::cout << "first done\n";
     std::bitset<14 * 14 * 14> rotatedCollider = collider.getRotatedStructure(offset);
 
-    int origCount = this->structure.voxelCount();
-    int newCount = rotatedSelf.count();
-    if (origCount != newCount) {
-        std::cout << "Mismatch! original has " << origCount << " voxels while new has " << newCount << "voxels\n";
-    }
+    //int origCount = this->structure.voxelCount();
+    //int newCount = rotatedSelf.count();
 
     // AND the two bitsets together, result is overlap
     rotatedSelf &= rotatedCollider;
@@ -112,14 +108,10 @@ void RigidBody::detectCollision(const Object& collider) {
     }
     centerOfCollision /= rotatedSelf.count();
     centerOfCollision -= glm::vec3(7.0, 7.0, 7.0);
-    std::cout << "CenterOfCollision = (" << centerOfCollision.x << ", " << centerOfCollision.y << ", " << centerOfCollision.z << "\n";
 
-    std::cout << "Acc Before: " << glm::length(this->movement.linearAcceleration) << "\n";
     this->Impulse(collider.mass() * glm::length(collider.movement.linearVelocity - this->movement.linearVelocity), glm::normalize(collider.movement.linearVelocity - this->movement.linearVelocity), centerOfCollision);
-    std::cout << "Acc After : " << glm::length(this->movement.linearAcceleration) << "\n";
-
+    
     collisionCooldown = 5 * ceil(log(glm::length(this->movement.linearVelocity)));
-    std::cout << "Collision cooldown set to: " << collisionCooldown << "\n\n";
 }
 
 std::string RigidBody::getType() {
@@ -138,7 +130,7 @@ void RigidBody::Impulse(float impulse, glm::vec3 direction, glm::vec3 offsetFrom
     if (glm::length(offsetFromCenterOfMass) > 0.1) {
         glm::vec3 rotAxis = glm::normalize(glm::cross(offsetFromCenterOfMass, direction));
         float projCoef = glm::dot(glm::normalize(direction), glm::vec3(glm::rotate((3.1416f / 2), rotAxis) * glm::normalize(glm::vec4(offsetFromCenterOfMass, 1.0))));
-        newPhysics.rotationalAcceleration += glm::vec4(rotAxis, (impulse * projCoef) / (RigidBody::mass() * delta * glm::length(offsetFromCenterOfMass)));
+        newPhysics.rotationalAcceleration = glm::rotate((impulse * projCoef) / (RigidBody::mass() * delta * glm::length(offsetFromCenterOfMass)), rotAxis) * newPhysics.rotationalAcceleration;
     }
 
     setPhysics(newPhysics);

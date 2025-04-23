@@ -96,6 +96,9 @@ public:
     /// @brief Rotates the bitmap via 3 skews and returns in a larger bitmap
     /// @return a 14x14x14 bitset of the rotated structure
     std::bitset<14 * 14 * 14> getRotatedStructure(glm::ivec3) const;
+
+    /// @brief Rotates the bitmap via 3 skews and emplaces new structure over old structure
+    void hardRotateStructure();
 };
 
 #endif

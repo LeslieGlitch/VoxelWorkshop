@@ -4,10 +4,14 @@
  * Implementation class for base physics object
  */
 
+#define GLM_ENABLE_EXPERIMENTAL
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include "Object.h"
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtx/euler_angles.hpp>
 #include <fstream>
 #include <iostream>
 
@@ -268,18 +272,34 @@ static glm::vec3 quat2Euler(glm::vec4 q) {
 static glm::vec2 rotateViaSkew(const glm::vec2& origPos, const float& angle) {
     glm::vec2 result = origPos;
 
-    // compute skew for each step
-    float skewH = -tan(angle / 2);
-    float skewV = sin(angle);
+    // guard clauses to prevent division by 0
+    if (abs(sin(angle)) < 0.1) {
+        // angle is either 0 or 180deg
+        if (cos(angle) > 0) {
+            // no rotation
+            return result;
+        }
+        // 180 rotation
+        return glm::vec2(-result.x, -result.y);
+    }
 
-    // horizontal skew
-    result.x = result.x + round(skewH * result.y);
+    float alpha = ((cos(angle) - 1) / sin(angle));
+    float beta = sin(angle);
 
-    // vertical skew
-    result.y = result.y + round(skewV * result.x);
+    glm::mat2 hSkew(1.0, alpha, 0.0, 1.0);
+    glm::mat2 vSkew(1.0, 0.0, beta, 1.0);
 
-    // repeat horizontal skew
-    result.x = result.x + round(skewH * result.y);
+    // first hSkew
+    result = hSkew * result;
+    result = glm::vec2(round(result.x), round(result.y));
+
+    // vSkew
+    result = vSkew * result;
+    result = glm::vec2(round(result.x), round(result.y));
+
+    // second vSkew
+    result = hSkew * result;
+    result = glm::vec2(round(result.x), round(result.y));
 
     return result;
 }
@@ -287,18 +307,16 @@ static glm::vec2 rotateViaSkew(const glm::vec2& origPos, const float& angle) {
 std::bitset<14 * 14 * 14> Object::getRotatedStructure(glm::ivec3 offset = glm::ivec3(0, 0, 0)) const {
     // create result bitmask to fill in
     std::bitset<14 * 14 * 14> result;
-    
+
+    // get pitch (x), yaw (y), roll (z)
+    glm::vec3 eulerRot;
+    glm::extractEulerAngleXYZ(glm::rotate(Object::location.Rotation.w, glm::vec3(Object::location.Rotation.x, Object::location.Rotation.y, Object::location.Rotation.z)), eulerRot.x, eulerRot.y, eulerRot.z);
+    glm::vec4 quat = Object::location.Rotation;
+
     // iterate over cells in the original structure
     for (int i = 0; i < Object::structure.solidMask.size(); ++i) {
         // skip empty cells
         if (!Object::structure.solidMask[i]) continue;
-
-        // get pitch (x), yaw (y), roll (z)
-        glm::vec3 eulerRot = quat2Euler(Object::location.Rotation);
-        glm::vec4 quat = Object::location.Rotation;
-
-        //std::cout << "Quat : (" << quat.x << ", " << quat.y << ", " << quat.z << ", " << quat.w << ")\n";
-        //std::cout << "Euler: (" << eulerRot.x << ", " << eulerRot.y << ", " << eulerRot.z << ")\n\n";
 
         // get local coordinates ranging from -4 to 3
         glm::ivec3 internalCoords = Object::structure.indexToCoords(i) + glm::ivec3(-4, -4, -4);
@@ -310,26 +328,52 @@ std::bitset<14 * 14 * 14> Object::getRotatedStructure(glm::ivec3 offset = glm::i
         newCoords.z = rot.x;
         newCoords.x = rot.y;
         //pitch
-        rot = rotateViaSkew(glm::ivec2(newCoords.z, newCoords.y), eulerRot.x);
-        newCoords.z = rot.x;
-        newCoords.y = rot.y;
+        rot = rotateViaSkew(glm::ivec2(newCoords.y, newCoords.z), eulerRot.x);
+        newCoords.y = rot.x;
+        newCoords.z = rot.y;
         //roll
         rot = rotateViaSkew(glm::ivec2(newCoords.x, newCoords.y), eulerRot.z);
         newCoords.x = rot.x;
         newCoords.y = rot.y;
 
-        //std::cout << "Old Coords: (" << internalCoords.x << ", " << internalCoords.y << ", " << internalCoords.z << ")\n";
-        //std::cout << "New Coords: (" << newCoords.x << ", " << newCoords.y << ", " << newCoords.z << ")\n\n";
-
-        // offset coordinates to center on offset
+        // offset coordinates to return to all positive numbers and to center on center of big bitmask plus offset
         newCoords += glm::ivec3(7, 7, 7) + offset;
 
         // assign bit in mask
         int index = Object::structure.coordsToIndex(newCoords, 14);
-        if (index >= 0 && index < result.size())
-            result[index] = true;
+        if (index < 0 || index >= result.size()) continue;
+        result[index] = true;
     }
     return result;
+}
+
+void Object::hardRotateStructure() {
+    // rotate the structure
+    std::bitset<14 * 14 * 14> rotated = getRotatedStructure();
+
+    std::bitset<BRICKMAP_SIZE * BRICKMAP_SIZE * BRICKMAP_SIZE> result;
+    // iterate over bits in result
+    for (int i = 0; i < result.size(); ++i) {
+        glm::ivec3 coords = structure.indexToCoords(i);
+        // offset coords to get middle of larger bitmask
+        coords += glm::ivec3(3, 3, 3);
+
+        // convert back to an index within the larger bitmask
+        int bigIndex = structure.coordsToIndex(coords, 14);
+
+        // set the bit in the small mask to match the offset bit in the large mask
+        // of note; this doesnt include bits in a 3-deep layer around the large mask
+        if (bigIndex < 0 || bigIndex >= rotated.size()) continue;
+        structure.solidMask[i] = rotated[bigIndex];
+    }
+
+    // Set object rotation to 0 since rotation is now baked into model
+    LocationData newLoc{
+        location.Position, // Position
+        location.Scale, // Scale
+        glm::vec4(0.0, 0.0, 1.0, 0.0)// Rotation
+    };
+    setTransformation(newLoc);
 }
 
 void Object::detectCollision(const Object& collider) {

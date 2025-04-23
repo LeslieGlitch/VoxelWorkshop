@@ -97,10 +97,10 @@ namespace Render {
         // Enable depth buffer
         glEnable(GL_DEPTH_TEST);
 
-        Camera camera(screenSize[0], screenSize[1], glm::vec3(2.0f, 2.0f, 2.0f));
+        Camera camera(screenSize[0], screenSize[1], glm::vec3(0.0f, 0.0f, 15.0f));
 
         // Test object for movement
-        RigidBody Disk("hBox.bm");
+        RigidBody Disk("Disk.bm");
         LocationData location{
             glm::vec3(10.0, 0.0, 0.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale
@@ -109,8 +109,8 @@ namespace Render {
         PhysicsData movement{
             glm::vec3(0.0, 0.0, 9.0), // Linear Velocity
             glm::vec3(0.0, 0.0, 0.01), // Linear Acceleration
-            glm::vec4(0.0, 0.0, 0.0, 1.0), // Rotational Velocity
-            glm::vec4(0.0, 0.0, 0.0, 1.0), // Rotational Acceleration
+            glm::vec4(1.0, 0.0, 1.0, 1.0), // Rotational Velocity
+            glm::vec4(0.0, 0.0, 1.0, 0.0), // Rotational Acceleration
         };
         Disk.setTransformation(location);
         Disk.setPhysics(movement);
@@ -120,13 +120,13 @@ namespace Render {
         location = {
             glm::vec3(-10.0, 0.0, 0.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale
-            glm::vec4(1.0, 1.0, 1.0, 1.0)// Rotation
+            glm::vec4(0.0, 0.0, 1.0, 0.0)// Rotation
         };
         movement = {
             glm::vec3(0.0, 0.0, 9.0), // Linear Velocity
             glm::vec3(0.0, 0.0, 0.01), // Linear Acceleration
-            glm::vec4(1.0, 1.0, 1.0, 0.0), // Rotational Velocity
-            glm::vec4(1.0, 1.0, 1.0, 0.0), // Rotational Acceleration
+            glm::vec4(0.0, 0.0, 1.0, 1.0), // Rotational Velocity
+            glm::vec4(0.0, 0.0, 1.0, 0.0), // Rotational Acceleration
         };
         Ball.setTransformation(location);
         Ball.setPhysics(movement);
@@ -177,6 +177,27 @@ namespace Render {
                 firstClickL = true;
             }
 
+            if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
+                if (firstClickR) {
+                    //Disk.Impulse(200.0f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(2.0, 0.0, 0.0));
+                    //Ball.Impulse(200.0f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(2.0, 0.0, 0.0));
+
+                    //Disk.hardRotateStructure();
+                    //Ball.hardRotateStructure();
+
+                    //std::cout << glm::distance(Disk.location.Position, Ball.location.Position) << "\n";
+
+                    std::cout << "Box Location: (" << Disk.location.Position.x << ", " << Disk.location.Position.y << ", " << Disk.location.Position.z << ")\n";
+                    std::cout << "Box Rotation: (" << Disk.location.Rotation.w << ", " << Disk.location.Rotation.x << ", " << Disk.location.Rotation.y << ", " << Disk.location.Rotation.z << ")\n\n";
+
+                    firstClickR = false;
+                }
+
+            }
+            else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
+                firstClickR = true;
+            }
+
             if (isPhysicsTicking) {
                 Disk.update();
                 Ball.update();
@@ -184,17 +205,7 @@ namespace Render {
                 Disk.detectCollision(Ball);
                 Ball.detectCollision(Disk);
 
-                if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
-                    if (firstClickR) {
-                        Disk.Impulse(200.0f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(2.0, 0.0, 0.0));
-                        Ball.Impulse(200.0f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(2.0, 0.0, 0.0));
-                        firstClickR = false;
-                    }
-
-                }
-                else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
-                    firstClickR = true;
-                }
+                
             }
 
             Disk.render();
