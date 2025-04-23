@@ -16,8 +16,8 @@ const float VOXEL_SIZE = 1.0f / (8 * 8 * 8);
 struct PhysicsData {
     glm::vec3 linearVelocity = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 linearAcceleration = glm::vec3(0.0f, 0.0f, 0.0f);
-    glm::vec4 rotationalVelocity = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
-    glm::vec4 rotationalAcceleration = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+    glm::fquat rotationalVelocity = glm::fquat(0.0f, 0.0f, 1.0f, 0.0f);
+    glm::fquat rotationalAcceleration = glm::fquat(0.0f, 0.0f, 1.0f, 0.0f);
 };
 
 class Object {

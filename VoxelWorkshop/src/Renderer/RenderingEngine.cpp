@@ -105,13 +105,13 @@ namespace Render {
         LocationData location{
             glm::vec3(0.0, 10.0, 0.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale
-            glm::vec4(0.0, 0.0, 1.0, 1.0)// Rotation
+            glm::fquat(0.0, 0.0, 1.0, 0.0)// Rotation
         };
         PhysicsData movement{
             glm::vec3(0.0, 0.0, 9.0), // Linear Velocity
-            glm::vec3(0.0, 0.0, 0.01), // Linear Acceleration
-            glm::vec4(1.0, 0.0, 1.0, 1.0), // Rotational Velocity
-            glm::vec4(0.0, 0.0, 1.0, 0.0), // Rotational Acceleration
+            glm::vec3(0.0, 0.0, 0.0), // Linear Acceleration
+            glm::fquat(0.2, 0.0, 1.0, 0.0), // Rotational Velocity
+            glm::fquat(0.0, 0.0, 1.0, 0.00), // Rotational Acceleration
         };
         currentScene.rigidBodies.at(diskIndex).setTransformation(location);
         currentScene.rigidBodies.at(diskIndex).setPhysics(movement);
@@ -121,13 +121,13 @@ namespace Render {
         location = {
             glm::vec3(-10.0, 0.0, 0.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale
-            glm::vec4(0.0, 0.0, 1.0, 0.0)// Rotation
+            glm::fquat(0.0, 0.0, 1.0, 0.0)// Rotation
         };
         movement = {
             glm::vec3(0.0, 0.0, 9.0), // Linear Velocity
             glm::vec3(0.0, 0.0, 0.01), // Linear Acceleration
-            glm::vec4(0.0, 0.0, 1.0, 1.0), // Rotational Velocity
-            glm::vec4(0.0, 0.0, 1.0, 0.0), // Rotational Acceleration
+            glm::fquat(1.0, 0.0, 1.0, 0.0), // Rotational Velocity
+            glm::fquat(0.0, 0.0, 1.0, 0.0), // Rotational Acceleration
         };
         currentScene.rigidBodies.at(sphereIndex).setTransformation(location);
         currentScene.rigidBodies.at(sphereIndex).setPhysics(movement);
@@ -165,6 +165,9 @@ namespace Render {
             // Transform coordinates based on camera position
             camera.Matrix(45.0f, 0.1f, 1000.0f, shaderProgram, "camMatrix");
 
+            // Stop past frame impulses from acting on current frame
+            currentScene.resetAllAcceleration();
+
             // toggle physics
             if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
                 if (firstClickL) {
@@ -178,8 +181,8 @@ namespace Render {
 
             if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
                 if (firstClickR) {
-                    //Disk.Impulse(200.0f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(2.0, 0.0, 0.0));
-                    //Ball.Impulse(200.0f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(2.0, 0.0, 0.0));
+                    //currentScene.rigidBodies.at(diskIndex).Impulse(2000.0f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(4.0, 0.0, 0.0));
+                    //currentScene.rigidBodies.at(sphereIndex).Impulse(2000.0f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(4.0, 0.0, 0.0));
 
                     //Disk.hardRotateStructure();
                     //Ball.hardRotateStructure();
@@ -188,6 +191,7 @@ namespace Render {
 
                     std::cout << "Box Location: (" << currentScene.rigidBodies.at(diskIndex).location.Position.x << ", " << currentScene.rigidBodies.at(diskIndex).location.Position.y << ", " << currentScene.rigidBodies.at(diskIndex).location.Position.z << ")\n";
                     std::cout << "Box Rotation: (" << currentScene.rigidBodies.at(diskIndex).location.Rotation.w << ", " << currentScene.rigidBodies.at(diskIndex).location.Rotation.x << ", " << currentScene.rigidBodies.at(diskIndex).location.Rotation.y << ", " << currentScene.rigidBodies.at(diskIndex).location.Rotation.z << ")\n\n";
+                    std::cout << "Box RotVel  : (" << currentScene.rigidBodies.at(diskIndex).movement.rotationalVelocity.w << ", " << currentScene.rigidBodies.at(diskIndex).movement.rotationalVelocity.x << ", " << currentScene.rigidBodies.at(diskIndex).movement.rotationalVelocity.y << ", " << currentScene.rigidBodies.at(diskIndex).movement.rotationalVelocity.z << ")\n\n";
 
                     firstClickR = false;
                 }
@@ -197,7 +201,6 @@ namespace Render {
                 firstClickR = true;
             }
 
-            currentScene.resetAllAcceleration();
             currentScene.detectAllCollisions();
             currentScene.updateAll();
 

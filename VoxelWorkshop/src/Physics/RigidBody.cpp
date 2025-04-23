@@ -66,8 +66,12 @@ void RigidBody::update() {
     newPhysics.linearVelocity += RigidBody::movement.linearAcceleration * delta;
 
     // Update rotation data
-    newLocation.Rotation = glm::rotate(RigidBody::movement.rotationalVelocity.w * delta, glm::vec3(RigidBody::movement.rotationalVelocity.x, RigidBody::movement.rotationalVelocity.y, RigidBody::movement.rotationalVelocity.z)) * newLocation.Rotation;
-    newPhysics.rotationalVelocity = glm::rotate(RigidBody::movement.rotationalAcceleration.w * delta, glm::vec3(RigidBody::movement.rotationalAcceleration.x, RigidBody::movement.rotationalAcceleration.y, RigidBody::movement.rotationalAcceleration.z)) * newPhysics.rotationalVelocity;
+    glm::fquat deltaQuat = RigidBody::movement.rotationalVelocity;
+    deltaQuat.w *= delta / (2.0f * 3.1416f);
+    newLocation.Rotation = deltaQuat * newLocation.Rotation;
+    deltaQuat = RigidBody::movement.rotationalAcceleration;
+    deltaQuat.w *= delta / (2.0f * 3.1416f);
+    newPhysics.rotationalVelocity = deltaQuat * newPhysics.rotationalVelocity;
     
     setPhysics(newPhysics);
     setTransformation(newLocation);
@@ -132,6 +136,7 @@ std::string RigidBody::getType() {
     return "Rigid";
 }
 
+#include <iostream>
 void RigidBody::Impulse(float impulse, glm::vec3 direction, glm::vec3 offsetFromCenterOfMass) {
     // Create data to emplace
     //LocationData newLocation = RigidBody::location;
@@ -142,9 +147,13 @@ void RigidBody::Impulse(float impulse, glm::vec3 direction, glm::vec3 offsetFrom
 
     // Update rotation acceleration
     if (glm::length(offsetFromCenterOfMass) > 0.1) {
+        std::cout << "oldRot: (" << newPhysics.rotationalAcceleration.w << ", " << newPhysics.rotationalAcceleration.x << ", " << newPhysics.rotationalAcceleration.y << ", " << newPhysics.rotationalAcceleration.z << ")\n";
+        std::cout << "Rotation\n";
         glm::vec3 rotAxis = glm::normalize(glm::cross(offsetFromCenterOfMass, direction));
         float projCoef = glm::dot(glm::normalize(direction), glm::vec3(glm::rotate((3.1416f / 2), rotAxis) * glm::normalize(glm::vec4(offsetFromCenterOfMass, 1.0))));
-        newPhysics.rotationalAcceleration = glm::rotate((impulse * projCoef) / (RigidBody::mass() * delta * glm::length(offsetFromCenterOfMass)), rotAxis) * newPhysics.rotationalAcceleration;
+        float accMagnitude = (impulse * projCoef * glm::length(offsetFromCenterOfMass)) / (RigidBody::mass() * delta);
+        newPhysics.rotationalAcceleration = glm::fquat(accMagnitude, rotAxis) * newPhysics.rotationalAcceleration;
+        std::cout << "newRot: (" << newPhysics.rotationalAcceleration.w << ", " << newPhysics.rotationalAcceleration.x << ", " << newPhysics.rotationalAcceleration.y << ", " << newPhysics.rotationalAcceleration.z << ")\n";
     }
 
     setPhysics(newPhysics);

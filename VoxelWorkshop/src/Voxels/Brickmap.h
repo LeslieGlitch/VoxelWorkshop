@@ -8,8 +8,11 @@
 #ifndef BRICKMAP_H
 #define BRICKMAP_H
 
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include <bitset>
 #include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include "VisualData.h"
 #include "../Voxels/Material.h"
 #include "../Renderer/VAO.h"
@@ -20,7 +23,7 @@ const int BRICKMAP_SIZE = 8;
 struct LocationData {
     glm::vec3 Position = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 Scale = glm::vec3(1.0f, 1.0f, 1.0f);
-    glm::vec4 Rotation = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
+    glm::fquat Rotation = glm::fquat(0.0f, 0.0f, 1.0f, 0.0f);
 };
 
 class Brickmap {

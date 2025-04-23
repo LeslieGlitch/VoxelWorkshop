@@ -87,7 +87,7 @@ void Object::resetAcceleration() {
     // reset acceleration to prevent forces compounding over multiple frames
     PhysicsData resetPhysics = Object::movement;
     resetPhysics.linearAcceleration = glm::vec3(0.0, 0.0, 0.0);
-    resetPhysics.rotationalAcceleration = glm::vec4(0.0, 0.0, 1.0, 0.0);
+    resetPhysics.rotationalAcceleration = glm::fquat(0.0, 0.0, 1.0, 0.0);
     Object::setPhysics(resetPhysics);
 }
 
@@ -342,7 +342,7 @@ std::bitset<14 * 14 * 14> Object::getRotatedStructure(glm::ivec3 offset = glm::i
     // get pitch (x), yaw (y), roll (z)
     glm::vec3 eulerRot;
     glm::extractEulerAngleXYZ(glm::rotate(Object::location.Rotation.w, glm::vec3(Object::location.Rotation.x, Object::location.Rotation.y, Object::location.Rotation.z)), eulerRot.x, eulerRot.y, eulerRot.z);
-    glm::vec4 quat = Object::location.Rotation;
+    glm::fquat quat = Object::location.Rotation;
 
     // iterate over cells in the original structure
     for (int i = 0; i < Object::structure.solidMask.size(); ++i) {
@@ -402,7 +402,7 @@ void Object::hardRotateStructure() {
     LocationData newLoc{
         location.Position, // Position
         location.Scale, // Scale
-        glm::vec4(0.0, 0.0, 1.0, 0.0)// Rotation
+        glm::fquat(0.0, 0.0, 1.0, 0.0)// Rotation
     };
     setTransformation(newLoc);
 }
