@@ -130,7 +130,13 @@ void RigidBody::detectCollision(const Object& collider) {
     centerOfCollision /= rotatedSelf.count();
     centerOfCollision -= glm::vec3(7.0, 7.0, 7.0);
 
-    this->Impulse(collider.mass() * glm::length(collider.movement.linearVelocity - this->movement.linearVelocity), glm::normalize(collider.movement.linearVelocity - this->movement.linearVelocity), centerOfCollision);
+    if (collider.getType() == "Rigid") {
+        this->Impulse(collider.mass() * glm::length(collider.movement.linearVelocity - this->movement.linearVelocity), glm::normalize(collider.movement.linearVelocity - this->movement.linearVelocity), centerOfCollision);
+    }
+    else {
+        // replace mass with self
+        this->Impulse(1.5f * this->mass() * glm::length(collider.movement.linearVelocity - this->movement.linearVelocity), glm::normalize(collider.movement.linearVelocity - this->movement.linearVelocity), centerOfCollision);
+    }
     
     //collisionCooldown = 5 * ceil(log(glm::length(this->movement.linearVelocity)));
 }

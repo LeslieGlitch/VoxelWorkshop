@@ -43,6 +43,10 @@ StaticBody StaticBody::operator=(const StaticBody& right) {
 }
 
 void StaticBody::start() {
+    indexArraySize = StaticBody::structure.generateMesh(StaticBody::location, StaticBody::material);
+    // Link mesh to the VAO
+    StaticBody::structure.linkMesh();
+
     // Perform Base start logic
     Object::start();
     return;

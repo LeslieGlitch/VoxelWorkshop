@@ -14,17 +14,17 @@ Scene::Scene() {
 
 // Spawn new static object
 unsigned int Scene::newStatic() {
-    staticBodies.emplace_back(StaticBody());
+    staticBodies.emplace_back();
     return staticBodies.size() - 1;
 }
 
 unsigned int Scene::newStatic(std::string filename) {
-    staticBodies.emplace_back(StaticBody(filename));
+    staticBodies.emplace_back(filename);
     return staticBodies.size() - 1;
 }
 
 unsigned int Scene::newStatic(Brickmap brickmap) {
-    staticBodies.emplace_back(StaticBody(brickmap));
+    staticBodies.emplace_back(brickmap);
     return staticBodies.size() - 1;
 }
 

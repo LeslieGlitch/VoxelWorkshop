@@ -119,7 +119,7 @@ namespace Render {
         // Test Scene
         Scene currentScene;
         /*
-        unsigned int diskIndex = currentScene.newRigid("Disk.bm");
+        unsigned int diskIndex = currentScene.newStatic("Disk.bm");
         LocationData location{
             glm::vec3(0.0, 10.0, 0.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale
@@ -131,13 +131,13 @@ namespace Render {
             glm::angleAxis(6.28f, glm::vec3(0.0f, 1.0f, 0.0f)), // Rotational Velocity
             glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f)), // Rotational Acceleration
         };
-        currentScene.rigidBodies.at(diskIndex).setTransformation(location);
-        currentScene.rigidBodies.at(diskIndex).setPhysics(movement);
-        currentScene.rigidBodies.at(diskIndex).setMaterial(clay);
-        rigidLabel[diskIndex] = "ClayDisk";
-        currentScene.rigidBodies.at(diskIndex).setLabel(&rigidLabel[diskIndex]);
+        currentScene.staticBodies.at(diskIndex).setTransformation(location);
+        currentScene.staticBodies.at(diskIndex).setPhysics(movement);
+        currentScene.staticBodies.at(diskIndex).setMaterial(clay);
+        staticLabel[diskIndex] = "ClayDisk";
+        currentScene.staticBodies.at(diskIndex).setLabel(&staticLabel[diskIndex]);
 
-        unsigned int sphereIndex = currentScene.newRigid("hSphere.bm");
+        unsigned int sphereIndex = currentScene.newStatic("hSphere.bm");
         location = {
             glm::vec3(-10.0, 0.0, 0.0), // Position
             glm::vec3(1.0, 1.0, 1.0), // Scale
@@ -149,11 +149,11 @@ namespace Render {
             glm::angleAxis(-3.0f, glm::vec3(1.0f, 0.0f, 0.0f)), // Rotational Velocity
             glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f)), // Rotational Acceleration
         };
-        currentScene.rigidBodies.at(sphereIndex).setTransformation(location);
-        currentScene.rigidBodies.at(sphereIndex).setPhysics(movement);
-        currentScene.rigidBodies.at(sphereIndex).setMaterial(dirt);
-        rigidLabel[sphereIndex] = "DirtSphere";
-        currentScene.rigidBodies.at(sphereIndex).setLabel(&rigidLabel[sphereIndex]);
+        currentScene.staticBodies.at(sphereIndex).setTransformation(location);
+        currentScene.staticBodies.at(sphereIndex).setPhysics(movement);
+        currentScene.staticBodies.at(sphereIndex).setMaterial(dirt);
+        staticLabel[sphereIndex] = "DirtSphere";
+        currentScene.staticBodies.at(sphereIndex).setLabel(&staticLabel[sphereIndex]);
 
         currentScene.startAll();
         */
@@ -211,9 +211,9 @@ namespace Render {
 
                     //std::cout << glm::distance(Disk.location.Position, Ball.location.Position) << "\n";
 
-                    //std::cout << "Box Location: (" << currentScene.staticBodies.at(sphereIndex).location.Position.x << ", " << currentScene.staticBodies.at(sphereIndex).location.Position.y << ", " << currentScene.staticBodies.at(sphereIndex).location.Position.z << ")\n";
-                    //std::cout << "Box Rotation: (" << currentScene.staticBodies.at(sphereIndex).location.Rotation.w << ", " << currentScene.staticBodies.at(sphereIndex).location.Rotation.x << ", " << currentScene.staticBodies.at(sphereIndex).location.Rotation.y << ", " << currentScene.staticBodies.at(sphereIndex).location.Rotation.z << ")\n\n";
-                    //std::cout << "Box RotVel  : (" << currentScene.staticBodies.at(sphereIndex).movement.rotationalVelocity.w << ", " << currentScene.staticBodies.at(sphereIndex).movement.rotationalVelocity.x << ", " << currentScene.staticBodies.at(sphereIndex).movement.rotationalVelocity.y << ", " << currentScene.staticBodies.at(sphereIndex).movement.rotationalVelocity.z << ")\n\n";
+                    std::cout << "Location: (" << selectedObj->location.Position.x << ", " << selectedObj->location.Position.y << ", " << selectedObj->location.Position.z << ")\n";
+                    std::cout << "Rotation: (" << selectedObj->location.Rotation.w << ", " << selectedObj->location.Rotation.x << ", " << selectedObj->location.Rotation.y << ", " << selectedObj->location.Rotation.z << ")\n";
+                    std::cout << "RotVel  : (" << selectedObj->movement.rotationalVelocity.w << ", " << selectedObj->movement.rotationalVelocity.x << ", " << selectedObj->movement.rotationalVelocity.y << ", " << selectedObj->movement.rotationalVelocity.z << ")\n";
 
                     if (selectedObj == nullptr) {
                         std::cout << "No Object Selected\n";
@@ -221,7 +221,7 @@ namespace Render {
                     else {
                         std::cout << selectedObj->getLabel() << "\n";
                     }
-                    std::cout << currentScene.rigidBodies.size();
+                    std::cout << currentScene.rigidBodies.size() << "\n\n";
 
                     firstClickR = false;
                 }
@@ -411,6 +411,8 @@ namespace Render {
 
         ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
 
+        int index = 0;
+
         // No selected object
         if (selectedObj == nullptr) {
             ImGui::SeparatorText("New Object");
@@ -425,11 +427,11 @@ namespace Render {
             if (ImGui::Button("Spawn Object")) {
                 std::cout << "obj added";
                 if (objectType == 0) {
-                    int index = currentScene.newStatic(structureFile);
+                    index = currentScene.newStatic(structureFile);
                     selectedObj = &(currentScene.staticBodies.at(index));
                 }
                 else {
-                    int index = currentScene.newRigid(structureFile);
+                    index = currentScene.newRigid(structureFile);
                     selectedObj = &(currentScene.rigidBodies.at(index));
                 }
 
