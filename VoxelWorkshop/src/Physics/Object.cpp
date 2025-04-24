@@ -273,10 +273,14 @@ bool Object::saveToFile(const std::string& fileName) {
 }
 
 void Object::start() {
+    canUpdate = true;
     return;
 }
 
 void Object::update() {
+    if (!canUpdate) {
+        return;
+    }
     // tick down collision cooldown
     if (collisionCooldown > 0) collisionCooldown--;
 

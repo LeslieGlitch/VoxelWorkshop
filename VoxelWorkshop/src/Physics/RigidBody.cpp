@@ -48,11 +48,10 @@ RigidBody RigidBody::operator=(const RigidBody& right) {
 
 void RigidBody::start() {
     // Perform Base start logic
-    Object::start();
     indexArraySize = RigidBody::structure.generateMesh(RigidBody::location, RigidBody::material);
     // Link mesh to the VAO
     RigidBody::structure.linkMesh();
-    canUpdate = true;
+    Object::start();
     return;
 }
 
@@ -133,7 +132,7 @@ void RigidBody::detectCollision(const Object& collider) {
 
     this->Impulse(collider.mass() * glm::length(collider.movement.linearVelocity - this->movement.linearVelocity), glm::normalize(collider.movement.linearVelocity - this->movement.linearVelocity), centerOfCollision);
     
-    collisionCooldown = 5 * ceil(log(glm::length(this->movement.linearVelocity)));
+    //collisionCooldown = 5 * ceil(log(glm::length(this->movement.linearVelocity)));
 }
 
 std::string RigidBody::getType() {
@@ -142,6 +141,11 @@ std::string RigidBody::getType() {
 
 #include <iostream>
 void RigidBody::Impulse(float impulse, glm::vec3 direction, glm::vec3 offsetFromCenterOfMass) {
+    // Guard clause: no direction
+    if (glm::length(direction) < 0.1) {
+        return;
+    }
+
     // Create data to emplace
     //LocationData newLocation = RigidBody::location;
     PhysicsData newPhysics = RigidBody::movement;

@@ -34,6 +34,21 @@ namespace Render {
 
     // GUI globals
     Object* selectedObj = nullptr;
+    LocationData customLoc{
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::angleAxis(0.1f, glm::vec3(0.0f, 1.0f, 0.0f))
+    };
+    PhysicsData customPhy{
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f)),
+        glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f))
+    };
+    Material customMat;
+    std::string structureFile = "Box.bm";
+    std::string rigidLabel[16];
+    std::string staticLabel[16];
 
     // local variables
     const GLdouble pi = 3.1415926535897932384626433832795;
@@ -103,7 +118,7 @@ namespace Render {
 
         // Test Scene
         Scene currentScene;
-
+        /*
         unsigned int diskIndex = currentScene.newRigid("Disk.bm");
         LocationData location{
             glm::vec3(0.0, 10.0, 0.0), // Position
@@ -119,8 +134,8 @@ namespace Render {
         currentScene.rigidBodies.at(diskIndex).setTransformation(location);
         currentScene.rigidBodies.at(diskIndex).setPhysics(movement);
         currentScene.rigidBodies.at(diskIndex).setMaterial(clay);
-        std::string diskLabel = "ClayDisk";
-        currentScene.rigidBodies.at(diskIndex).setLabel(&diskLabel);
+        rigidLabel[diskIndex] = "ClayDisk";
+        currentScene.rigidBodies.at(diskIndex).setLabel(&rigidLabel[diskIndex]);
 
         unsigned int sphereIndex = currentScene.newRigid("hSphere.bm");
         location = {
@@ -137,11 +152,11 @@ namespace Render {
         currentScene.rigidBodies.at(sphereIndex).setTransformation(location);
         currentScene.rigidBodies.at(sphereIndex).setPhysics(movement);
         currentScene.rigidBodies.at(sphereIndex).setMaterial(dirt);
-        std::string ballLabel = "DirtSphere";
-        currentScene.rigidBodies.at(sphereIndex).setLabel(&ballLabel);
+        rigidLabel[sphereIndex] = "DirtSphere";
+        currentScene.rigidBodies.at(sphereIndex).setLabel(&rigidLabel[sphereIndex]);
 
         currentScene.startAll();
-
+        */
         bool firstClickL = true;
         bool firstClickR = true;
         bool isPhysicsTicking = false;
@@ -206,6 +221,7 @@ namespace Render {
                     else {
                         std::cout << selectedObj->getLabel() << "\n";
                     }
+                    std::cout << currentScene.rigidBodies.size();
 
                     firstClickR = false;
                 }
@@ -239,21 +255,6 @@ namespace Render {
         return 0;
     }
 
-    LocationData customLoc{
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(1.0f, 1.0f, 1.0f),
-        glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f))
-    };
-    PhysicsData customPhy{
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::vec3(0.0f, 0.0f, 0.0f),
-        glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f)),
-        glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f))
-    };
-    Material customMat;
-    std::string structureFile = "Box.bm";
-    std::string rigidLabel[16];
-    std::string staticLabel[16];
     /*
     void ShowMenuBar(Scene& currentScene) {
         // Menu Bar
@@ -299,6 +300,19 @@ namespace Render {
         ImGui::Separator();
         if (ImGui::Button("Deselect")) {
             selectedObj = nullptr;
+            customLoc = {
+                glm::vec3(0.0f, 0.0f, 0.0f),
+                glm::vec3(1.0f, 1.0f, 1.0f),
+                glm::angleAxis(0.1f, glm::vec3(0.0f, 1.0f, 0.0f))
+            };
+            customPhy = {
+                glm::vec3(0.0f, 0.0f, 0.0f),
+                glm::vec3(0.0f, 0.0f, 0.0f),
+                glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f)),
+                glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f))
+            };
+            customMat = stone;
+            structureFile = "Box.bm";
         }
 
         // Only show rigid bodies if there are some to show
@@ -409,12 +423,13 @@ namespace Render {
 
             // Spawn Object
             if (ImGui::Button("Spawn Object")) {
+                std::cout << "obj added";
                 if (objectType == 0) {
-                    int index = currentScene.newStatic("Box.bm");
+                    int index = currentScene.newStatic(structureFile);
                     selectedObj = &(currentScene.staticBodies.at(index));
                 }
                 else {
-                    int index = currentScene.newRigid("Box.bm");
+                    int index = currentScene.newRigid(structureFile);
                     selectedObj = &(currentScene.rigidBodies.at(index));
                 }
 

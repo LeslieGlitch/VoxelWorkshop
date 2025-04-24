@@ -25,6 +25,8 @@ protected:
     const float delta = 1.0f / 60.0f;
 
     float collisionCooldown = 0;
+
+    bool canUpdate = false;
 public:
     // Where the object is and is going
     LocationData location;
