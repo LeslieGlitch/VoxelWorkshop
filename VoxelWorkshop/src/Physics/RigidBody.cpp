@@ -103,7 +103,7 @@ void RigidBody::detectCollision(const Object& collider) {
 
     // get collider position relative to self
     glm::ivec3 offset = (collider.location.Position - this->location.Position);
-    offset *= 0.125;
+    offset *= 8;
 
     // create bitset big enough to hold rotated object
     std::bitset <14 * 14 * 14> rotatedSelf = this->getRotatedStructure(glm::ivec3(0, 0, 0));
@@ -127,12 +127,19 @@ void RigidBody::detectCollision(const Object& collider) {
     centerOfCollision /= rotatedSelf.count();
     centerOfCollision -= glm::vec3(7.0, 7.0, 7.0);
 
+    // Push self out of object to prevent clipping
+    glm::vec3 pushDirection = glm::normalize(collider.movement.linearVelocity - this->movement.linearVelocity);
+    const float pushStrength = 0.125f;
+    this->location.Position += pushStrength * glm::normalize(pushDirection);
+
+    // Apply force to self
+    float accStrength = glm::length(collider.movement.linearVelocity - this->movement.linearVelocity);
     if (collider.getType() == "Rigid") {
-        this->Impulse(collider.mass() * glm::length(collider.movement.linearVelocity - this->movement.linearVelocity), glm::normalize(collider.movement.linearVelocity - this->movement.linearVelocity), centerOfCollision);
+        this->Impulse(collider.mass() * accStrength, pushDirection, centerOfCollision);
     }
     else {
-        // replace mass with self
-        this->Impulse(1.5f * this->mass() * glm::length(collider.movement.linearVelocity - this->movement.linearVelocity), glm::normalize(collider.movement.linearVelocity - this->movement.linearVelocity), centerOfCollision);
+        // replace mass with self and multiply a modifier
+        this->Impulse(1.5f * this->mass() * accStrength, pushDirection, centerOfCollision);
     }
     
     //collisionCooldown = 5 * ceil(log(glm::length(this->movement.linearVelocity)));

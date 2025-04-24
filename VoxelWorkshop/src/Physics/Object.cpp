@@ -360,10 +360,14 @@ std::bitset<14 * 14 * 14> Object::getRotatedStructure(glm::ivec3 offset = glm::i
     // create result bitmask to fill in
     std::bitset<14 * 14 * 14> result;
 
-    // get pitch (x), yaw (y), roll (z)
-    glm::vec3 eulerRot;
-    glm::extractEulerAngleXYZ(glm::rotate(Object::location.Rotation.w, glm::vec3(Object::location.Rotation.x, Object::location.Rotation.y, Object::location.Rotation.z)), eulerRot.x, eulerRot.y, eulerRot.z);
-    glm::fquat quat = Object::location.Rotation;
+    // get pitch (x), yaw (y), roll (z) in radians
+    glm::vec3 eulerRot = glm::vec3(
+        glm::pitch(Object::location.Rotation),
+        glm::yaw(Object::location.Rotation),
+        glm::roll(Object::location.Rotation)
+    );
+    glm::extractEulerAngleZXY(glm::mat4_cast(glm::normalize(Object::location.Rotation)), eulerRot.z, eulerRot.x, eulerRot.y);
+    std::cout << "Extracted Euler angles: (" << eulerRot.x << ", " << eulerRot.y << ", " << eulerRot.z << ")\n";
 
     // iterate over cells in the original structure
     for (int i = 0; i < Object::structure.solidMask.size(); ++i) {
@@ -375,6 +379,8 @@ std::bitset<14 * 14 * 14> Object::getRotatedStructure(glm::ivec3 offset = glm::i
 
         // rotate yaw, pitch, then roll
         glm::ivec3 newCoords = internalCoords;
+        
+        
         //yaw
         glm::ivec2 rot = rotateViaSkew(glm::ivec2(newCoords.z, newCoords.x), eulerRot.y);
         newCoords.z = rot.x;
@@ -423,7 +429,7 @@ void Object::hardRotateStructure() {
     LocationData newLoc{
         location.Position, // Position
         location.Scale, // Scale
-        glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f)) // Rotation
+        glm::fquat(0.0f, 0.0f, 1.0f, 0.0f) // Rotation
     };
     setTransformation(newLoc);
 }

@@ -121,45 +121,7 @@ namespace Render {
 
         // Test Scene
         Scene currentScene;
-        /*
-        unsigned int diskIndex = currentScene.newStatic("Disk.bm");
-        LocationData location{
-            glm::vec3(0.0, 10.0, 0.0), // Position
-            glm::vec3(1.0, 1.0, 1.0), // Scale
-            glm::angleAxis(0.01f, glm::vec3(0.0f, 1.0f, 0.0f))// Rotation
-        };
-        PhysicsData movement{
-            glm::vec3(0.0, 0.0, 9.0), // Linear Velocity
-            glm::vec3(0.0, 0.0, 0.0), // Linear Acceleration
-            glm::angleAxis(6.28f, glm::vec3(0.0f, 1.0f, 0.0f)), // Rotational Velocity
-            glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f)), // Rotational Acceleration
-        };
-        currentScene.staticBodies.at(diskIndex).setTransformation(location);
-        currentScene.staticBodies.at(diskIndex).setPhysics(movement);
-        currentScene.staticBodies.at(diskIndex).setMaterial(clay);
-        staticLabel[diskIndex] = "ClayDisk";
-        currentScene.staticBodies.at(diskIndex).setLabel(&staticLabel[diskIndex]);
 
-        unsigned int sphereIndex = currentScene.newStatic("hSphere.bm");
-        location = {
-            glm::vec3(-10.0, 0.0, 0.0), // Position
-            glm::vec3(1.0, 1.0, 1.0), // Scale
-            glm::angleAxis(1.0f, glm::vec3(0.0f, 1.0f, 0.0f))// Rotation
-        };
-        movement = {
-            glm::vec3(0.0, 0.0, 9.0), // Linear Velocity
-            glm::vec3(0.0, 0.0, 0.0), // Linear Acceleration
-            glm::angleAxis(-3.0f, glm::vec3(1.0f, 0.0f, 0.0f)), // Rotational Velocity
-            glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f)), // Rotational Acceleration
-        };
-        currentScene.staticBodies.at(sphereIndex).setTransformation(location);
-        currentScene.staticBodies.at(sphereIndex).setPhysics(movement);
-        currentScene.staticBodies.at(sphereIndex).setMaterial(dirt);
-        staticLabel[sphereIndex] = "DirtSphere";
-        currentScene.staticBodies.at(sphereIndex).setLabel(&staticLabel[sphereIndex]);
-
-        currentScene.startAll();
-        */
         bool firstClickL = true;
         bool firstClickR = true;
         bool isPhysicsTicking = false;
@@ -209,14 +171,14 @@ namespace Render {
                     //currentScene.rigidBodies.at(diskIndex).Impulse(2000.0f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(4.0, 0.0, 0.0));
                     //currentScene.rigidBodies.at(sphereIndex).Impulse(2000.0f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(4.0, 0.0, 0.0));
 
-                    //Disk.hardRotateStructure();
+                    selectedObj->hardRotateStructure();
                     //Ball.hardRotateStructure();
 
                     //std::cout << glm::distance(Disk.location.Position, Ball.location.Position) << "\n";
 
-                    std::cout << "Location: (" << selectedObj->location.Position.x << ", " << selectedObj->location.Position.y << ", " << selectedObj->location.Position.z << ")\n";
-                    std::cout << "Rotation: (" << selectedObj->location.Rotation.w << ", " << selectedObj->location.Rotation.x << ", " << selectedObj->location.Rotation.y << ", " << selectedObj->location.Rotation.z << ")\n";
-                    std::cout << "RotVel  : (" << selectedObj->movement.rotationalVelocity.w << ", " << selectedObj->movement.rotationalVelocity.x << ", " << selectedObj->movement.rotationalVelocity.y << ", " << selectedObj->movement.rotationalVelocity.z << ")\n";
+                    //std::cout << "Location: (" << selectedObj->location.Position.x << ", " << selectedObj->location.Position.y << ", " << selectedObj->location.Position.z << ")\n";
+                    //std::cout << "Rotation: (" << selectedObj->location.Rotation.w << ", " << selectedObj->location.Rotation.x << ", " << selectedObj->location.Rotation.y << ", " << selectedObj->location.Rotation.z << ")\n";
+                    //std::cout << "RotVel  : (" << selectedObj->movement.rotationalVelocity.w << ", " << selectedObj->movement.rotationalVelocity.x << ", " << selectedObj->movement.rotationalVelocity.y << ", " << selectedObj->movement.rotationalVelocity.z << ")\n";
 
                     if (selectedObj == nullptr) {
                         std::cout << "No Object Selected\n";
