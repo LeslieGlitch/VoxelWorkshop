@@ -49,10 +49,18 @@ RigidBody RigidBody::operator=(const RigidBody& right) {
 void RigidBody::start() {
     // Perform Base start logic
     Object::start();
+    indexArraySize = RigidBody::structure.generateMesh(RigidBody::location, RigidBody::material);
+    // Link mesh to the VAO
+    RigidBody::structure.linkMesh();
+    canUpdate = true;
     return;
 }
 
 void RigidBody::update() {
+    if (!canUpdate) {
+        return;
+    }
+
     // Perform Base update logic
     Object::update();
 

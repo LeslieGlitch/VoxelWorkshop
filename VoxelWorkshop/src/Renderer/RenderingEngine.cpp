@@ -28,9 +28,12 @@
 const unsigned int screenSize[] = { 1280, 720 };
 
 namespace Render {
-    void ShowMenuBar(Scene&);
+    //void ShowMenuBar(Scene&);
     void ShowSceneGui(Scene&);
     void ShowObjectGui(Scene&);
+
+    // GUI globals
+    Object* selectedObj = nullptr;
 
     // local variables
     const GLdouble pi = 3.1415926535897932384626433832795;
@@ -116,6 +119,8 @@ namespace Render {
         currentScene.rigidBodies.at(diskIndex).setTransformation(location);
         currentScene.rigidBodies.at(diskIndex).setPhysics(movement);
         currentScene.rigidBodies.at(diskIndex).setMaterial(clay);
+        std::string diskLabel = "ClayDisk";
+        currentScene.rigidBodies.at(diskIndex).setLabel(&diskLabel);
 
         unsigned int sphereIndex = currentScene.newRigid("hSphere.bm");
         location = {
@@ -132,6 +137,8 @@ namespace Render {
         currentScene.rigidBodies.at(sphereIndex).setTransformation(location);
         currentScene.rigidBodies.at(sphereIndex).setPhysics(movement);
         currentScene.rigidBodies.at(sphereIndex).setMaterial(dirt);
+        std::string ballLabel = "DirtSphere";
+        currentScene.rigidBodies.at(sphereIndex).setLabel(&ballLabel);
 
         currentScene.startAll();
 
@@ -150,7 +157,7 @@ namespace Render {
             ImGui::NewFrame();
 
             // GUI windows
-            ShowMenuBar(currentScene); // Save/Load scene and play/pause/stop simulation
+            //ShowMenuBar(currentScene); // Save/Load scene and play/pause/stop simulation
             ShowSceneGui(currentScene); // Objects in active scene
             ShowObjectGui(currentScene); // Object properties
 
@@ -193,6 +200,13 @@ namespace Render {
                     //std::cout << "Box Rotation: (" << currentScene.staticBodies.at(sphereIndex).location.Rotation.w << ", " << currentScene.staticBodies.at(sphereIndex).location.Rotation.x << ", " << currentScene.staticBodies.at(sphereIndex).location.Rotation.y << ", " << currentScene.staticBodies.at(sphereIndex).location.Rotation.z << ")\n\n";
                     //std::cout << "Box RotVel  : (" << currentScene.staticBodies.at(sphereIndex).movement.rotationalVelocity.w << ", " << currentScene.staticBodies.at(sphereIndex).movement.rotationalVelocity.x << ", " << currentScene.staticBodies.at(sphereIndex).movement.rotationalVelocity.y << ", " << currentScene.staticBodies.at(sphereIndex).movement.rotationalVelocity.z << ")\n\n";
 
+                    if (selectedObj == nullptr) {
+                        std::cout << "No Object Selected\n";
+                    }
+                    else {
+                        std::cout << selectedObj->getLabel() << "\n";
+                    }
+
                     firstClickR = false;
                 }
 
@@ -225,6 +239,22 @@ namespace Render {
         return 0;
     }
 
+    LocationData customLoc{
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
+        glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f))
+    };
+    PhysicsData customPhy{
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f)),
+        glm::angleAxis(0.0f, glm::vec3(0.0f, 1.0f, 0.0f))
+    };
+    Material customMat;
+    std::string structureFile = "Box.bm";
+    std::string rigidLabel[16];
+    std::string staticLabel[16];
+    /*
     void ShowMenuBar(Scene& currentScene) {
         // Menu Bar
         if (ImGui::BeginMainMenuBar()) {
@@ -243,7 +273,7 @@ namespace Render {
 
         return;
     }
-
+    */
     void ShowSceneGui(Scene& currentScene) {
         // Main Body of window
         if (!ImGui::Begin("Scene View", NULL)) {
@@ -266,10 +296,92 @@ namespace Render {
             currentScene.reset();
         }
 
-        // Text
-        ImGui::Text("A list of objects in the scene");
+        ImGui::Separator();
+        if (ImGui::Button("Deselect")) {
+            selectedObj = nullptr;
+        }
 
-        ///@TODO pull list of objects from current scene, display here
+        // Only show rigid bodies if there are some to show
+        if (!currentScene.rigidBodies.empty()) {
+            // List objects in scene
+            ImGui::SeparatorText("Rigid Bodies");
+            for (int i = 0; i < currentScene.rigidBodies.size(); i++)
+            {
+                ImGui::PushID(i);
+                ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV((float)i / currentScene.rigidBodies.size(), 0.6f, 0.6f));
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV((float)i / currentScene.rigidBodies.size(), 0.7f, 0.7f));
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV((float)i / currentScene.rigidBodies.size(), 0.8f, 0.8f));
+                char buffer[32];
+                if (currentScene.rigidBodies.at(i).label == nullptr) {
+                    rigidLabel[i] = "NewRigidObject";
+                    currentScene.rigidBodies.at(i).setLabel(&rigidLabel[i]);
+                }
+                std::sprintf(buffer, "%s%d", currentScene.rigidBodies.at(i).getLabel().c_str(), i);
+                if (ImGui::Button(buffer)) {
+                    selectedObj = &currentScene.rigidBodies.at(i);
+                    customLoc = selectedObj->location;
+                    customPhy = selectedObj->movement;
+                    customMat = selectedObj->material;
+                    rigidLabel[i] = selectedObj->getLabel();
+                    structureFile = *selectedObj->structure.filename;
+                }
+                ImGui::PopStyleColor(3);
+                ImGui::PopID();
+            }
+        }
+
+        // Only show static bodies if there are some to show
+        if (!currentScene.staticBodies.empty()) {
+            // List objects in scene
+            ImGui::SeparatorText("Static Bodies");
+            for (int i = 0; i < currentScene.staticBodies.size(); i++)
+            {
+                ImGui::PushID(i);
+                ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV((float)i / currentScene.staticBodies.size(), 0.6f, 0.6f));
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV((float)i / currentScene.staticBodies.size(), 0.7f, 0.7f));
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV((float)i / currentScene.staticBodies.size(), 0.8f, 0.8f));
+                char buffer[32];
+                if (currentScene.staticBodies.at(i).label == nullptr) {
+                    staticLabel[i] = "NewStaticObject";
+                    currentScene.staticBodies.at(i).setLabel(&staticLabel[i]);
+                }
+                std::sprintf(buffer, "%s%d", currentScene.staticBodies.at(i).getLabel().c_str(), i);
+                if (ImGui::Button(buffer)) {
+                    selectedObj = &currentScene.staticBodies.at(i);
+                    customLoc = selectedObj->location;
+                    customPhy = selectedObj->movement;
+                    customMat = selectedObj->material;
+                    staticLabel[i] = selectedObj->getLabel();
+                    structureFile = *selectedObj->structure.filename;
+                }
+                ImGui::PopStyleColor(3);
+                ImGui::PopID();
+            }
+        }
+
+        // Gravity controls
+        ImGui::SeparatorText("Gravity");
+        static int e = 0; // no clue, this was just in the DearImGui demo
+        if (ImGui::RadioButton("No Gravity", &e, 0));
+        if (ImGui::RadioButton("Vector Gravity", &e, 1));
+        if (ImGui::RadioButton("Point Gravity", &e, 2));
+        glm::vec3 gravity = glm::vec3(0.0f, -1.0f, 0.0f);
+        switch (e) {
+        case 0:
+            break;
+        case 1:
+            ImGui::Text("Gravity Direction");
+            ImGui::InputFloat("x", &gravity.x);
+            ImGui::InputFloat("y", &gravity.y);
+            ImGui::InputFloat("z", &gravity.z);
+            break;
+        case 2:
+            ImGui::Text("Gravity Center Location");
+            ImGui::InputFloat("x", &gravity.x);
+            ImGui::InputFloat("y", &gravity.y);
+            ImGui::InputFloat("z", &gravity.z);
+            break;
+        }
 
         // End and return
         ImGui::End();
@@ -285,10 +397,133 @@ namespace Render {
 
         ImGui::PushItemWidth(ImGui::GetFontSize() * -12);
 
-        ///@TODO Take currently selected object and display properties
+        // No selected object
+        if (selectedObj == nullptr) {
+            ImGui::SeparatorText("New Object");
 
-        // Text
-        ImGui::Text("A list of properties on the object");
+            // Select Static vs Rigid
+            static int objectType = 1;
+            ImGui::RadioButton("Static Body", &objectType, 0);
+            ImGui::SameLine();
+            ImGui::RadioButton("Rigid Body", &objectType, 1);
+
+            // Spawn Object
+            if (ImGui::Button("Spawn Object")) {
+                if (objectType == 0) {
+                    int index = currentScene.newStatic("Box.bm");
+                    selectedObj = &(currentScene.staticBodies.at(index));
+                }
+                else {
+                    int index = currentScene.newRigid("Box.bm");
+                    selectedObj = &(currentScene.rigidBodies.at(index));
+                }
+
+                selectedObj->setTransformation(customLoc);
+                selectedObj->setPhysics(customPhy);
+                selectedObj->setMaterial(customMat);
+
+                selectedObj->start();
+            }
+        }
+        else { // Selected object
+            ImGui::SeparatorText(selectedObj->getLabel().c_str());
+
+            // Update Object
+            if (ImGui::Button("Update parameters")) {
+                selectedObj->setPhysics(customPhy);
+                selectedObj->structure.loadFromFile(structureFile);
+                selectedObj->setMaterial(customMat);
+                selectedObj->setTransformation(customLoc);
+            }
+        }
+
+        // Location Data
+        ImGui::SeparatorText("Position");
+        ImGui::InputFloat("x##POS", &customLoc.Position.x);
+        ImGui::InputFloat("y##POS", &customLoc.Position.y);
+        ImGui::InputFloat("z##POS", &customLoc.Position.z);
+
+        ImGui::SeparatorText("Scale");
+        ImGui::InputFloat("x##SCL", &customLoc.Scale.x);
+        ImGui::InputFloat("y##SCL", &customLoc.Scale.y);
+        ImGui::InputFloat("z##SCL", &customLoc.Scale.z);
+
+        ImGui::SeparatorText("Rotation");
+        ImGui::InputFloat("w##ROT", &customLoc.Rotation.w);
+        ImGui::InputFloat("x##ROT", &customLoc.Rotation.x);
+        ImGui::InputFloat("y##ROT", &customLoc.Rotation.y);
+        ImGui::InputFloat("z##ROT", &customLoc.Rotation.z);
+
+        // Physics Data
+        ImGui::SeparatorText("Linear Velocity");
+        ImGui::InputFloat("x##LVL", &customPhy.linearVelocity.x);
+        ImGui::InputFloat("y##LVL", &customPhy.linearVelocity.y);
+        ImGui::InputFloat("z##LVL", &customPhy.linearVelocity.z);
+
+        ImGui::SeparatorText("Linear Acceleration");
+        ImGui::InputFloat("x##LAC", &customPhy.linearAcceleration.x);
+        ImGui::InputFloat("y##LAC", &customPhy.linearAcceleration.y);
+        ImGui::InputFloat("z##LAC", &customPhy.linearAcceleration.z);
+
+        ImGui::SeparatorText("Rotational Velocity");
+        ImGui::InputFloat("w##RVL", &customPhy.rotationalVelocity.w);
+        ImGui::InputFloat("x##RVL", &customPhy.rotationalVelocity.x);
+        ImGui::InputFloat("y##RVL", &customPhy.rotationalVelocity.y);
+        ImGui::InputFloat("z##RVL", &customPhy.rotationalVelocity.z);
+
+        ImGui::SeparatorText("Rotational Acceleration");
+        ImGui::InputFloat("w##RAC", &customPhy.rotationalAcceleration.w);
+        ImGui::InputFloat("x##RAC", &customPhy.rotationalAcceleration.x);
+        ImGui::InputFloat("y##RAC", &customPhy.rotationalAcceleration.y);
+        ImGui::InputFloat("z##RAC", &customPhy.rotationalAcceleration.z);
+
+        // Material
+        ImGui::SeparatorText("Material");
+        const char* matItems[] = {
+            "stone",
+            "wood",
+            "foliage",
+            "iron",
+            "gold",
+            "cloth",
+            "dirt",
+            "clay"
+        };
+        static int matSelectedIndex = 0;
+        if (ImGui::BeginListBox("##Material")) {
+            for (int i = 0; i < IM_ARRAYSIZE(matItems); ++i) {
+                const bool isSelected = (matSelectedIndex == i);
+                if (ImGui::Selectable(matItems[i], isSelected)) {
+                    matSelectedIndex = i;
+                    customMat = (MatList)i;
+                }
+            }
+
+            ImGui::EndListBox();
+        }
+
+        // Shape
+        ImGui::SeparatorText("Voxel Shape");
+        const char* items[] = {
+            "Box.bm",
+            "hBox.bm",
+            "Sphere.bm",
+            "hSphere.bm",
+            "Disk.bm",
+            "hDisk.bm"
+        };
+        static int selectedIndex = 0;
+        if (ImGui::BeginListBox("##Shape")) {
+            for (int i = 0; i < IM_ARRAYSIZE(items); ++i) {
+                const bool isSelected = (selectedIndex == i);
+                if (ImGui::Selectable(items[i], isSelected)) {
+                    selectedIndex = i;
+                    structureFile = items[i];
+                }
+            }
+
+            ImGui::EndListBox();
+        }
 
         // End and return
         ImGui::End();

@@ -36,6 +36,9 @@ public:
     // The brickmap model
     Brickmap structure;
 
+    // Label for user to see
+    std::string* label = nullptr;
+
     // Index array size for rendering
     unsigned int indexArraySize = 0;
 
@@ -63,6 +66,10 @@ public:
     void setPhysics(const PhysicsData& movement);
 
     void setMaterial(const Material& material);
+
+    void setLabel(std::string* label);
+
+    std::string getLabel();
 
     /// @brief Renders the game object
     void render();

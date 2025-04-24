@@ -45,6 +45,7 @@ Object::Object(const Object& source) {
     Object::material = source.material;
     Object::structure = source.structure;
     Object::indexArraySize = source.indexArraySize;
+    Object::label = source.label;
 }
 
 Object Object::operator=(const Object& right) {
@@ -73,6 +74,14 @@ void Object::setMaterial(const Material& material) {
     indexArraySize = Object::structure.generateMesh(Object::location, Object::material);
     // Link mesh to the VAO
     Object::structure.linkMesh();
+}
+
+void Object::setLabel(std::string* label) {
+    Object::label = label;
+}
+
+std::string Object::getLabel() {
+    return *Object::label;
 }
 
 void Object::render() {

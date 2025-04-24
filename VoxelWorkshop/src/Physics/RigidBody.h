@@ -10,6 +10,8 @@
 #include "Object.h"
 
 class RigidBody : public Object {
+protected:
+    bool canUpdate = false;
 public:
     /// @brief Default Constructor
     RigidBody();

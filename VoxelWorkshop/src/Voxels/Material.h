@@ -26,6 +26,7 @@ private:
     MatList ID = stone;
 
 public:
+    Material();
     Material(MatList ID);
     Material(const Material& material);
     glm::vec3 getColor() const;

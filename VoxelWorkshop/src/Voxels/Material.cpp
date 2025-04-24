@@ -29,6 +29,10 @@ float MatDensities[] = {
     1600.00  // clay
 };
 
+Material::Material() {
+    Material::ID = stone;
+}
+
 Material::Material(MatList ID) {
     Material::ID = ID;
 }
