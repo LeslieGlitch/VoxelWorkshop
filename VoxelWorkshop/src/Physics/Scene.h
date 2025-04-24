@@ -40,6 +40,8 @@ public:
     void renderAll();
     void startAll();
     void updateAll();
+    void gravitateAllToPoint(glm::vec3 attractor);
+    void gravitateAllInDirection(glm::vec3 direction);
     void detectAllCollisions();
     void resetAllAcceleration();
 

@@ -63,9 +63,6 @@ void RigidBody::update() {
     // Perform Base update logic
     Object::update();
 
-    // Apply gravitational force
-    RigidBody::Impulse(RigidBody::mass() * 9.8f * delta, -RigidBody::location.Position);
-
     // Update location data
     LocationData newLocation = RigidBody::location;
     PhysicsData newPhysics = RigidBody::movement;
@@ -143,6 +140,18 @@ void RigidBody::detectCollision(const Object& collider) {
 
 std::string RigidBody::getType() {
     return "Rigid";
+}
+
+void RigidBody::applyDirectionGravity(glm::vec3 direction) {
+    // Apply gravitational force
+    RigidBody::Impulse(RigidBody::mass() * 9.8f * delta, direction);
+    return;
+}
+
+void RigidBody::applyPointGravity(glm::vec3 pointLocation) {
+    // Apply gravitational force
+    RigidBody::Impulse(RigidBody::mass() * 9.8f * delta, pointLocation - RigidBody::location.Position);
+    return;
 }
 
 #include <iostream>

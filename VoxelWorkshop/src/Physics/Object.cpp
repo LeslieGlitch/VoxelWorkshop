@@ -291,6 +291,14 @@ std::string Object::getType() {
     return "Object";
 }
 
+void Object::applyDirectionGravity(glm::vec3 direction) {
+    return;
+}
+
+void Object::applyPointGravity(glm::vec3 pointLocation) {
+    return;
+}
+
 static glm::vec3 quat2Euler(glm::vec4 q) {
     // roll (x-axis rotation)
     double sinr_cosp = 2 * (q.w * q.x + q.y * q.z);

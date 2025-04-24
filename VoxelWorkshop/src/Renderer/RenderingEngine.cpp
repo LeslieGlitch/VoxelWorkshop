@@ -49,6 +49,9 @@ namespace Render {
     std::string structureFile = "Box.bm";
     std::string rigidLabel[16];
     std::string staticLabel[16];
+    static int gravityType = 0;
+    glm::vec3 gravPoint = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 gravDir = glm::vec3(0.0f, -1.0f, 0.0f);
 
     // local variables
     const GLdouble pi = 3.1415926535897932384626433832795;
@@ -231,6 +234,20 @@ namespace Render {
                 firstClickR = true;
             }
 
+            switch (gravityType) {
+            case 0:
+                //No gravity
+                break;
+            case 1:
+                // Directional gravity
+                currentScene.gravitateAllInDirection(gravDir);
+                break;
+            case 2:
+                // Point gravity
+                currentScene.gravitateAllToPoint(gravPoint);
+                break;
+            }
+
             currentScene.detectAllCollisions();
             currentScene.updateAll();
 
@@ -375,25 +392,23 @@ namespace Render {
 
         // Gravity controls
         ImGui::SeparatorText("Gravity");
-        static int e = 0; // no clue, this was just in the DearImGui demo
-        if (ImGui::RadioButton("No Gravity", &e, 0));
-        if (ImGui::RadioButton("Vector Gravity", &e, 1));
-        if (ImGui::RadioButton("Point Gravity", &e, 2));
-        glm::vec3 gravity = glm::vec3(0.0f, -1.0f, 0.0f);
-        switch (e) {
+        if (ImGui::RadioButton("No Gravity", &gravityType, 0));
+        if (ImGui::RadioButton("Vector Gravity", &gravityType, 1));
+        if (ImGui::RadioButton("Point Gravity", &gravityType, 2));
+        switch (gravityType) {
         case 0:
             break;
         case 1:
             ImGui::Text("Gravity Direction");
-            ImGui::InputFloat("x", &gravity.x);
-            ImGui::InputFloat("y", &gravity.y);
-            ImGui::InputFloat("z", &gravity.z);
+            ImGui::InputFloat("x", &gravDir.x);
+            ImGui::InputFloat("y", &gravDir.y);
+            ImGui::InputFloat("z", &gravDir.z);
             break;
         case 2:
             ImGui::Text("Gravity Center Location");
-            ImGui::InputFloat("x", &gravity.x);
-            ImGui::InputFloat("y", &gravity.y);
-            ImGui::InputFloat("z", &gravity.z);
+            ImGui::InputFloat("x", &gravPoint.x);
+            ImGui::InputFloat("y", &gravPoint.y);
+            ImGui::InputFloat("z", &gravPoint.z);
             break;
         }
 

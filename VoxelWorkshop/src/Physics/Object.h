@@ -106,6 +106,14 @@ public:
 
     static std::string getType();
 
+    /// @brief Apply gravitational force in a certain direction
+    /// @param direction Direction gravity acts
+    void applyDirectionGravity(glm::vec3 direction = glm::vec3(0.0f, -1.0f, 0.0f));
+
+    /// @brief Apply gravitational force towards a certain point
+    /// @param pointLocation Point of attraction
+    void applyPointGravity(glm::vec3 pointLocation = glm::vec3(0.0f, 0.0f, 0.0f));
+
     /// @brief Detects if there is a collision between self and another object, applies force to itself
     /// @param collider Object to test collision with
     void detectCollision(const Object& collider);

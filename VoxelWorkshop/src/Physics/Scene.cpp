@@ -93,6 +93,18 @@ void Scene::updateAll() {
     }
 }
 
+void Scene::gravitateAllToPoint(glm::vec3 attractor) {
+    for (int i = 0; i < rigidBodies.size(); ++i) {
+        rigidBodies.at(i).applyPointGravity(attractor);
+    }
+}
+
+void Scene::gravitateAllInDirection(glm::vec3 direction) {
+    for (int i = 0; i < rigidBodies.size(); ++i) {
+        rigidBodies.at(i).applyDirectionGravity(direction);
+    }
+}
+
 void Scene::detectAllCollisions() {
     if (!isRunning) return;
 
