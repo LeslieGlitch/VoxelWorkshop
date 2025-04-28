@@ -201,7 +201,7 @@ bool Brickmap::loadFromFile(const std::string& fileName) {
             std::cerr << "Error: Badbit is set\n";
         }
         if (file.fail()) {
-            std::cerr << std::strerror(errno) << "\n";
+            //std::cerr << std::strerror(errno) << "\n";
         }
 
         return true;
@@ -242,7 +242,7 @@ bool Brickmap::saveToFile(const std::string &fileName) {
             std::cerr << "Error: Badbit is set\n";
         }
         if (file.fail()) {
-            std::cerr << std::strerror(errno) << "\n";
+            //std::cerr << std::strerror(errno) << "\n";
         }
 
         return true;

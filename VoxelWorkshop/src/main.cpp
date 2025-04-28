@@ -18,11 +18,12 @@ const int MAX_TICKRATE = 30; // in tps
 
 int main() {
     // Start other threads
-    std::thread RenderThread(Render::render, MAX_FRAMERATE, VIEWPORT_SIZE);
+    //std::thread RenderThread(Render::render, MAX_FRAMERATE, VIEWPORT_SIZE);
+    Render::render(MAX_FRAMERATE, VIEWPORT_SIZE);
     //std::thread PhysicsThread(Physics::physics, MAX_TICKRATE);
 
     // wait for threads to terminate before continuing
-    RenderThread.join();
+    //RenderThread.join();
     //PhysicsThread.join();
 
     return 0;

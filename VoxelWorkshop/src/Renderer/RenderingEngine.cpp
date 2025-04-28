@@ -6,10 +6,11 @@
 
 // Turn on GLM experiments
 #define GLM_ENABLE_EXPERIMENTAL
+#define _CRT_SECURE_NO_WARNINGS
 
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
+#include "../imgui/imgui.h"
+#include "../imgui/imgui_impl_glfw.h"
+#include "../imgui/imgui_impl_opengl3.h"
 
 #include <iostream>
 #include <glad/glad.h>
@@ -107,7 +108,7 @@ namespace Render {
 
         // Setup Platform/Renderer backends
         ImGui_ImplGlfw_InitForOpenGL(window, true);          // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
-        ImGui_ImplOpenGL3_Init();
+        ImGui_ImplOpenGL3_Init("#version 330 core");
 
         /* Shaders */
 
@@ -131,6 +132,11 @@ namespace Render {
         {
             glfwPollEvents();
 
+            // Specify the color of the background
+            glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+            // Clean the back buffer and assign the new color to it
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
             // Start the DearImGui frame
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplGlfw_NewFrame();
@@ -141,10 +147,6 @@ namespace Render {
             ShowSceneGui(currentScene); // Objects in active scene
             ShowObjectGui(currentScene); // Object properties
 
-            // Specify the color of the background
-            glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-            // Clean the back buffer and assign the new color to it
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             // Tell OpenGL which Shader Program we want to use
             shaderProgram.Activate();
             // Collect inputs from user

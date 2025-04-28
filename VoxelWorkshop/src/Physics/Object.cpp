@@ -124,7 +124,7 @@ bool Object::loadFromFile(const std::string& fileName) {
             std::cerr << "Error: Badbit is set\n";
         }
         if (file.fail()) {
-            std::cerr << std::strerror(errno) << "\n";
+            //std::cerr << std::strerror(errno) << "\n";
         }
 
         return true;
@@ -216,7 +216,7 @@ bool Object::saveToFile(const std::string& fileName) {
             std::cerr << "Error: Badbit is set\n";
         }
         if (file.fail()) {
-            std::cerr << std::strerror(errno) << "\n";
+            //std::cerr << std::strerror(errno) << "\n";
         }
 
         return true;

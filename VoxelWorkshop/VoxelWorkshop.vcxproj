@@ -74,6 +74,10 @@
     <IncludePath>$(SolutionDir)\Linking\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(SolutionDir)\Linking\lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\Documents\Classwork\Spring2025\CapstoneProject\VoxelWorkshop\Linking\include</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);D:\Documents\Classwork\Spring2025\CapstoneProject\VoxelWorkshop\Linking\lib</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -123,6 +127,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\Documents\Classwork\Spring2025\CapstoneProject\VoxelWorkshop\Linking\include\;imgui</AdditionalIncludeDirectories>
+      <AdditionalModuleDependencies>D:\Documents\Classwork\Spring2025\CapstoneProject\VoxelWorkshop\Linking\include</AdditionalModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -132,13 +138,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Linking\include\imgui\imgui.cpp" />
-    <ClCompile Include="..\Linking\include\imgui\imgui_demo.cpp" />
-    <ClCompile Include="..\Linking\include\imgui\imgui_draw.cpp" />
-    <ClCompile Include="..\Linking\include\imgui\imgui_impl_glfw.cpp" />
-    <ClCompile Include="..\Linking\include\imgui\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="..\Linking\include\imgui\imgui_tables.cpp" />
-    <ClCompile Include="..\Linking\include\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\imgui\imgui.cpp" />
+    <ClCompile Include="src\imgui\imgui_demo.cpp" />
+    <ClCompile Include="src\imgui\imgui_draw.cpp" />
+    <ClCompile Include="src\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="src\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="src\imgui\imgui_tables.cpp" />
+    <ClCompile Include="src\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\Physics\Object.cpp" />
     <ClCompile Include="src\Physics\PhysicsEngine.cpp" />
     <ClCompile Include="src\Physics\RigidBody.cpp" />
@@ -160,20 +166,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="glfw3.dll" />
+    <None Include="imgui.ini" />
     <None Include="src\Shaders\default.frag" />
     <None Include="src\Shaders\default.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Linking\include\imgui\imconfig.h" />
-    <ClInclude Include="..\Linking\include\imgui\imgui.h" />
-    <ClInclude Include="..\Linking\include\imgui\imgui_impl_glfw.h" />
-    <ClInclude Include="..\Linking\include\imgui\imgui_impl_opengl3.h" />
-    <ClInclude Include="..\Linking\include\imgui\imgui_impl_opengl3_loader.h" />
-    <ClInclude Include="..\Linking\include\imgui\imgui_internal.h" />
-    <ClInclude Include="..\Linking\include\imgui\imstb_rectpack.h" />
-    <ClInclude Include="..\Linking\include\imgui\imstb_textedit.h" />
-    <ClInclude Include="..\Linking\include\imgui\imstb_truetype.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="src\imgui\imconfig.h" />
+    <ClInclude Include="src\imgui\imgui.h" />
+    <ClInclude Include="src\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="src\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="src\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="src\imgui\imgui_internal.h" />
+    <ClInclude Include="src\imgui\imstb_rectpack.h" />
+    <ClInclude Include="src\imgui\imstb_textedit.h" />
+    <ClInclude Include="src\imgui\imstb_truetype.h" />
     <ClInclude Include="src\Physics\Object.h" />
     <ClInclude Include="src\Physics\PhysicsEngine.hpp" />
     <ClInclude Include="src\Physics\RigidBody.h" />
