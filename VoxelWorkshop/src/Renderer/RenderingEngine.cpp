@@ -167,7 +167,7 @@ namespace Render {
             else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
                 firstClickL = true;
             }
-
+            /*
             if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
                 if (firstClickR) {
                     //currentScene.rigidBodies.at(diskIndex).Impulse(2000.0f, glm::vec3(0.0, 1.0, 0.0), glm::vec3(4.0, 0.0, 0.0));
@@ -197,7 +197,7 @@ namespace Render {
             else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
                 firstClickR = true;
             }
-
+            */
             switch (gravityType) {
             case 0:
                 //No gravity
