@@ -7,8 +7,9 @@ Voxel Workshop is a physics and rendering engine designed to work with voxelized
 objects. The goal for the project is to allow users to create objects and interact with them in a physics simulation in real time.
 
 ---
-## Video Demo  
-<video controls src="gitMedia/IGD-TermProject-LeslieWollitz.mp4" title="Some basic functionality of Voxel Workshop"></video>
+## Video Demo
+
+https://github.com/user-attachments/assets/b5d359e0-3a89-4a08-9c1d-18e8175aafff
 
 ---
 
